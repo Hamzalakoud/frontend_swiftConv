@@ -1,0 +1,76 @@
+<div class="sidebar-wrapper d-flex flex-column" style="height: 115vh;">
+
+  <div class="logo" style="flex-shrink: 0;">
+    <a class="simple-text logo-mini">
+      <div class="logo-image-small">
+        <img src="https://upload.wikimedia.org/wikipedia/fr/archive/7/74/20250603043408%21Logo_biat_2019.jpg" alt="BIAT Logo">
+      </div>
+    </a>
+    <a [routerLink]="['/dashboard']" class="simple-text logo-normal">
+      SWIFT CONV
+    </a>
+  </div>
+
+  <div style="flex-grow: 1; overflow-y: auto; padding-bottom: 120px;">
+    <ul class="nav">
+      <ng-container *ngFor="let menuItem of menuItems">
+        <!-- If the item has children -->
+        <li *ngIf="menuItem.children; else singleLink" [ngClass]="menuItem.class">
+          <a href="javascript:void(0)" (click)="toggleCollapse(menuItem)">
+            <i class="nc-icon {{ menuItem.icon }}"></i>
+              <p style="display: flex; align-items: center; justify-content: space-between; margin: 0;">
+                <span style="flex: 1;">{{ menuItem.title }}</span>
+                <b class="caret" [ngStyle]="{ transform: menuItem.open ? 'rotate(0deg)' : 'rotate(90deg)' }" style="margin-top: 8px;"></b>
+              </p>
+          </a>
+
+          <ul class="nav" *ngIf="menuItem.open" style="padding-left: 20px;">
+            <ng-container *ngFor="let child of menuItem.children">
+              <li *ngIf="child.children; else childLink">
+                <a href="javascript:void(0)" (click)="toggleCollapse(child)">
+                  <i class="nc-icon {{ child.icon }}"></i>
+                    <p style="display: flex; align-items: center; justify-content: space-between; margin: 0;">
+                      <span style="flex: 1;">{{ child.title }}</span>
+                      <b class="caret" [ngStyle]="{ transform: child.open ? 'rotate(0deg)' : 'rotate(90deg)' }" style="margin-top: 3px;"></b>
+                    </p>
+                </a>
+                <ul class="nav" *ngIf="child.open" style="padding-left: 20px;">
+                  <li *ngFor="let grandchild of child.children" routerLinkActive="active">
+                    <a [routerLink]="[grandchild.path]">
+                      <i class="nc-icon {{ grandchild.icon }}"></i>
+                      <p style="margin-left: 10px;">{{ grandchild.title }}</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <ng-template #childLink>
+                <li routerLinkActive="active">
+                  <a [routerLink]="[child.path]">
+                    <i class="nc-icon {{ child.icon }}"></i>
+                    <p>{{ child.title }}</p>
+                  </a>
+                </li>
+              </ng-template>
+            </ng-container>
+          </ul>
+        </li>
+
+        <!-- If the item is a single link -->
+        <ng-template #singleLink>
+          <li [ngClass]="menuItem.class" routerLinkActive="active">
+            <a [routerLink]="[menuItem.path]">
+              <i class="nc-icon {{ menuItem.icon }}"></i>
+              <p>{{ menuItem.title }}</p>
+            </a>
+          </li>
+        </ng-template>
+      </ng-container>
+    </ul>
+  </div>
+
+  <!-- Fixed footer with BIAT IT Logo -->
+  <div style="position: fixed; bottom: 0; width: 260px; background: white; padding: 15px 0 15px 20px; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);">
+    <img src="assets/img/image001.jpg" alt="BIAT IT Logo" style="max-height: 35px; border-radius: 6px;" />
+  </div>
+
+</div>

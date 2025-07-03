@@ -1,0 +1,15 @@
+
+
+input::placeholder {
+  color: rgba(0, 0, 0, 0.2); /* Black with 30% opacity */
+  /* You can adjust the opacity value as you like, e.g., 0.2 or 0.4 */
+}
+input:focus::placeholder {
+  color: transparent;
+  transition: color 0.2s ease;
+}
+.table-responsive {
+  overflow-x: auto;   /* enable horizontal scrolling */
+  overflow-y: hidden; /* hide vertical scrollbar */
+  white-space: nowrap; /* prevent wrapping inside the table */
+}

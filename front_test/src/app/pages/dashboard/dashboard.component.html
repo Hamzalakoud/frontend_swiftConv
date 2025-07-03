@@ -1,0 +1,127 @@
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-body ">
+        <div class="row">
+          <div class="col-5 col-md-4">
+            <div class="icon-big text-center icon-warning">
+              <i class="nc-icon nc-check-2 text-success"></i>
+            </div>
+          </div>
+          <div class="col-7 col-md-8">
+            <div class="numbers">
+              <p class="card-category">Messages converti</p>
+              <p class="card-title">{{ totalConvertedDay }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer ">
+        <hr>
+        <div class="stats">
+          <i class="fa fa-calendar-o"></i> Per Day
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-body ">
+        <div class="row">
+          <div class="col-5 col-md-4">
+            <div class="icon-big text-center icon-warning">
+              <i class="nc-icon nc-simple-remove text-danger"></i>
+            </div>
+          </div>
+          <div class="col-7 col-md-8">
+            <div class="numbers">
+              <p class="card-category">Messages Non converti</p>
+              <p class="card-title">{{ totalNSConvertDay }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer ">
+        <hr>
+        <div class="stats">
+          <i class="fa fa-calendar-o"></i> Per Day
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-4 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-body ">
+        <div class="row">
+          <div class="col-5 col-md-4">
+            <div class="icon-big text-center icon-warning">
+              <i class="nc-icon nc-refresh-69 text-warning"></i>
+            </div>
+          </div>
+          <div class="col-7 col-md-8">
+            <div class="numbers">
+              <p class="card-category">Messages rejete</p>
+              <p class="card-title">{{ totalFailedDay }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer ">
+        <hr>
+        <div class="stats">
+          <i class="fa fa-calendar-o"></i> Per Day
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Bar Chart on the Left -->
+  <div class="col-md-8">
+    <div class="card card-chart">
+      <div class="card-header">
+        <h5 class="card-title">Weekly Message Status</h5>
+        <p class="card-category">Converted vs NC vs Failed (Bar Chart)</p>
+      </div>
+      <div class="card-body">
+        <canvas id="speedChart" width="400" height="108.6"></canvas>
+      </div>
+      <div class="card-footer">
+        <hr/>
+        <div class="card-stats">
+          <i class="fa fa-calendar"></i> Per Week
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly Status on the Right -->
+  <div class="col-md-4">
+    <div class="card ">
+      <div class="card-header ">
+        <h5 class="card-title">Message Weekly Status</h5>
+        <p class="card-category">Converted vs NS vs Failed</p>
+      </div>
+      <div class="card-body ">
+        <canvas id="MessageStatus"></canvas>
+      </div>
+      <div class="card-footer ">
+        <div class="legend">
+          <i class="fa fa-circle" style="color:#2ecc71"></i> Converted
+          <i class="fa fa-circle" style="color:#f39c12"></i> NS
+          <i class="fa fa-circle" style="color:#e74c3c"></i> Failed
+        </div>
+        <hr>
+        <div class="stats">
+          <i class="fa fa-calendar"></i> Data from current week
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

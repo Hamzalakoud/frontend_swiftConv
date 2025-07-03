@@ -1,0 +1,306 @@
+<div class="card">
+
+  <div class="card-header">
+    <h5 class="card-title">SC_CONVERSION Messages</h5>
+  </div>
+
+  <!-- FILTER FORM -->
+  <div class="card-body">
+    <form (ngSubmit)="applyFilter()" class="mb-4">
+      <div class="row">
+        <div class="col-md-3">
+          <label>Filename</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.filename"
+            name="filename"
+            placeholder="e.g. file.xml"
+          />
+        </div>
+        <div class="col-md-2">
+          <label>Message Category</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.msgCateg"
+            name="msgCateg"
+            placeholder="e.g. FIN"
+          />
+        </div>
+        <div class="col-md-2">
+          <label>Message Type</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.msgType"
+            name="msgType"
+            placeholder="e.g. MT103"
+          />
+        </div>
+        <div class="col-md-2 ">
+          <label>BIC Em</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.bicEm"
+            name="bicEm"
+            placeholder="e.g. BICEMXXX"
+          />
+        </div>
+        <div class="col-md-2">
+          <label>BIC De</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.bicDe"
+            name="bicDe"
+            placeholder="e.g. BICDEXXX"
+          />
+        </div>
+        <div class="col-md-3 ">
+          <label>UERTR</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.uertr"
+            name="uertr"
+            placeholder="e.g. 12345678"
+          />
+        </div>
+        <div class="col-md-2">
+          <label>Amount</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.amount"
+            name="amount"
+            placeholder="e.g. 1000"
+          />
+        </div>
+        <div class="col-md-2 ">
+          <label>Currency</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.currency"
+            name="currency"
+            placeholder="e.g. USD"
+          />
+        </div>
+        <div class="col-md-2">
+          <label>Customer Account</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.customerAccount"
+            name="customerAccount"
+            placeholder="e.g. 1234567890"
+          />
+        </div>
+        <div class="col-md-2 ">
+          <label>Tag 71A</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.tag71A"
+            name="tag71A"
+            placeholder="e.g. OUR"
+          />
+        </div>
+        <div class="col-md-2">
+          <label>Status</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.status"
+            name="status"
+            placeholder="e.g. PENDING"
+          />
+        </div>
+        <div class="col-md-2">
+          <label>Sens</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.sens"
+            name="sens"
+            placeholder="e.g. IN/OUT"
+          />
+        </div>
+        <div class="col-md-2 ">
+          <label>To Convert</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.toConvert"
+            name="toConvert"
+            placeholder="e.g. YES/NO"
+          />
+        </div>
+        <div class="col-md-2">
+          <label>Creation Date</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.creationDate"
+            name="creationDate"
+            placeholder="e.g. 2025-06-27"
+          />
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-3 position-relative">
+        <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Reset</button>
+
+        <!-- Sort dropdown -->
+        <div class="dropdown" [class.show]="isSortDropdownOpen" style="min-width: 150px;">
+          <button
+            class="btn btn-info btn-sm dropdown-toggle"
+            type="button"
+            id="sortDropdown"
+            (click)="toggleSortDropdown()"
+            [attr.aria-expanded]="isSortDropdownOpen"
+            aria-haspopup="true"
+          >
+            Sort
+          </button>
+          <ul
+            class="dropdown-menu dropdown-menu-end"
+            [class.show]="isSortDropdownOpen"
+            aria-labelledby="sortDropdown"
+            style="max-width: 250px; overflow-wrap: break-word;"
+          >
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                (click)="setSort('amount', 'asc'); toggleSortDropdown(); $event.preventDefault()"
+                >Amount Ascending</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                (click)="setSort('amount', 'desc'); toggleSortDropdown(); $event.preventDefault()"
+                >Amount Descending</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                (click)="setSort('creationDate', 'asc'); toggleSortDropdown(); $event.preventDefault()"
+                >Creation Date Ascending</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                href="#"
+                (click)="setSort('creationDate', 'desc'); toggleSortDropdown(); $event.preventDefault()"
+                >Creation Date Descending</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </form>
+
+    <!-- LOADING & ERROR -->
+    <div *ngIf="isLoading" class="text-center p-3">Loading data...</div>
+    <div *ngIf="error" class="text-danger p-3">{{ error }}</div>
+
+    <!-- RESPONSIVE TABLE -->
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="text-primary">
+          <tr>
+            <th>Filename</th>
+            <th>Msg Categ</th>
+            <th>Msg Type</th>
+            <th>BIC Em</th>
+            <th>BIC De</th>
+            <th>UERTR</th>
+            <th>Amount</th>
+            <th>Currency</th>
+            <th>Customer Account</th>
+            <th>Tag 71A</th>
+            <th>Status</th>
+            <th>Sens</th>
+            <th>To Convert</th>
+            <th>Creation Date</th>
+            <th class="text-center">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let file of paginatedFiles">
+            <td>{{ file.filename }}</td>
+            <td>{{ file.msgCateg }}</td>
+            <td>{{ file.msgType }}</td>
+            <td>{{ file.bicEm }}</td>
+            <td>{{ file.bicDe }}</td>
+            <td>{{ file.uertr }}</td>
+            <td>{{ file.amount }}</td>
+            <td>{{ file.currency }}</td>
+            <td>{{ file.customerAccount }}</td>
+            <td>{{ file.tag71A }}</td>
+            <td>{{ file.status }}</td>
+            <td>{{ file.sens }}</td>
+            <td>{{ file.toConvert }}</td>
+            <td>{{ file.creationDate | date: 'short' }}</td>
+            <td class="text-center">
+              <button
+                class="btn btn-link p-0"
+                (click)="viewMsg(file.id)"
+                title="View Full Message"
+                style="font-size: 1.4rem"
+              >
+                <i class="nc-icon nc-alert-circle-i"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredFiles.length === 0">
+            <td colspan="17" class="text-center text-muted">No matching records found.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination Controls -->
+      <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button
+              class="page-link"
+              (click)="goToPage(currentPage - 1)"
+              [disabled]="currentPage === 1"
+            >
+              Previous
+            </button>
+          </li>
+
+          <li
+            class="page-item"
+            *ngFor="let page of [].constructor(totalPages); let i = index"
+            [class.active]="currentPage === i + 1"
+          >
+            <button class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</button>
+          </li>
+
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button
+              class="page-link"
+              (click)="goToPage(currentPage + 1)"
+              [disabled]="currentPage === totalPages"
+            >
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

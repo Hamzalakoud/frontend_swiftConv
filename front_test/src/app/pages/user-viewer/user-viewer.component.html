@@ -1,0 +1,145 @@
+<div class="row" *ngIf="!isLoading && !errorMessage">
+  <div class="col-md-8 offset-md-2">
+    <div class="card card-user">
+      <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title mb-0">Edit Profile</h5>
+          <button
+            class="btn btn-sm btn-outline-secondary"
+            (click)="closeViewer()"
+            title="Close"
+          >
+            <i class="nc-icon nc-simple-remove" style="font-size: 1.2rem;"></i>
+          </button>
+        </div>
+
+      <div class="card-body">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+          <!-- First Name -->
+          <div class="form-group mb-3">
+            <label for="firstName">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              class="form-control"
+              formControlName="firstName"
+              placeholder="First Name"
+              [class.is-invalid]="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched"
+            >
+            <div class="invalid-feedback" *ngIf="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched">
+              First Name is required.
+            </div>
+          </div>
+
+          <!-- Last Name -->
+          <div class="form-group mb-3">
+            <label for="lastName">Last Name</label>
+            <input
+              type="text"
+              id="lastName"
+              class="form-control"
+              formControlName="lastName"
+              placeholder="Last Name"
+              [class.is-invalid]="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched"
+            >
+            <div class="invalid-feedback" *ngIf="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched">
+              Last Name is required.
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group mb-3">
+            <label for="email">Email address</label>
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="Email"
+              [class.is-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+            >
+            <div class="invalid-feedback" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+              Valid email is required.
+            </div>
+          </div>
+
+          <!-- Role -->
+          <div class="form-group mb-3">
+            <label for="role">Role</label>
+            <select
+              id="role"
+              class="form-control"
+              formControlName="role"
+              [class.is-invalid]="userForm.get('role')?.invalid && userForm.get('role')?.touched"
+            >
+              <option value="" disabled>Select role</option>
+              <option value="admin">Admin</option>
+              <option value="editeur">Éditeur</option>
+              <option value="viewer">Viewer</option>
+            </select>
+            <div class="invalid-feedback" *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched">
+              Role is required.
+            </div>
+          </div>
+
+          <!-- Status -->
+        <div class="form-group" style="margin-left: 30px;">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            formControlName="status"
+            id="statusCheckbox"
+          />
+          <label class="form-check-label ms-2" for="statusCheckbox">Status Active</label>
+        </div>
+
+
+
+
+          <!-- Password -->
+          <div class="form-group mb-3">
+            <label for="password">Password (leave blank to keep unchanged)</label>
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              formControlName="password"
+              placeholder="New Password"
+            >
+          </div>
+
+          <!-- Creation Date (readonly) -->
+          <div class="form-group mb-3">
+            <label>Created On</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="userData?.creationDate | date:'medium'"
+              disabled
+            >
+          </div>
+
+          <!-- Last Update Date (readonly) -->
+          <div class="form-group mb-3">
+            <label>Last Updated</label>
+            <input
+              type="text"
+              class="form-control"
+              [value]="userData?.lastUpdateDate | date:'medium'"
+              disabled
+            >
+          </div>
+              <button type="submit" class="btn btn-primary btn-round px-4 py-2" [disabled]="userForm.invalid">
+                Update Profile
+              </button>
+          
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading and Error Messages -->
+<div *ngIf="isLoading" class="text-center p-3">Loading user...</div>
+<div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>

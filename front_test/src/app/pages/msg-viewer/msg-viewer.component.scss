@@ -1,0 +1,18 @@
+.mt2 {
+  border-right: 1px solid #ccc;
+  padding-right: 1rem;
+}
+
+.ms2 {
+  padding-left: 1rem;
+}
+
+.msg-box {
+  white-space: pre-wrap;
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  max-height: 600px;
+  overflow-y: auto;
+  font-family: monospace;
+}
