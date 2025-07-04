@@ -2,19 +2,18 @@
   <div class="col-md-8 offset-md-2">
     <div class="card card-user">
       <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="card-title mb-0">Edit Profile</h5>
-          <button
-            class="btn btn-sm btn-outline-secondary"
-            (click)="closeViewer()"
-            title="Close"
-          >
-            <i class="nc-icon nc-simple-remove" style="font-size: 1.2rem;"></i>
-          </button>
-        </div>
+        <h5 class="card-title mb-0">Edit Profile</h5>
+        <button
+          class="btn btn-sm btn-outline-secondary"
+          (click)="closeViewer()"
+          title="Close"
+        >
+          <i class="nc-icon nc-simple-remove" style="font-size: 1.2rem;"></i>
+        </button>
+      </div>
 
       <div class="card-body">
         <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-
           <!-- First Name -->
           <div class="form-group mb-3">
             <label for="firstName">First Name</label>
@@ -81,20 +80,16 @@
               Role is required.
             </div>
           </div>
-
           <!-- Status -->
-        <div class="form-group" style="margin-left: 30px;">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            formControlName="status"
-            id="statusCheckbox"
-          />
-          <label class="form-check-label ms-2" for="statusCheckbox">Status Active</label>
-        </div>
-
-
-
+          <div class="form-group" style="margin-left: 30px;">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              formControlName="status"
+              id="statusCheckbox"
+            />
+            <label class="form-check-label ms-2" for="statusCheckbox">Status Active</label>
+          </div>
 
           <!-- Password -->
           <div class="form-group mb-3">
@@ -105,7 +100,14 @@
               class="form-control"
               formControlName="password"
               placeholder="New Password"
-            >
+              minlength="6"
+              [required]="userForm.get('password')?.value !== ''"
+              [class.is-invalid]="userForm.get('password')?.invalid && userForm.get('password')?.touched"
+            />
+            <div class="invalid-feedback" *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
+              <span *ngIf="userForm.get('password')?.errors?.['required']">Password is required.</span>
+              <span *ngIf="userForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</span>
+            </div>
           </div>
 
           <!-- Creation Date (readonly) -->
@@ -129,11 +131,10 @@
               disabled
             >
           </div>
-              <button type="submit" class="btn btn-primary btn-round px-4 py-2" [disabled]="userForm.invalid">
-                Update Profile
-              </button>
-          
 
+          <button type="submit" class="btn btn-primary btn-round px-4 py-2" [disabled]="userForm.invalid">
+            Apply
+          </button>
         </form>
       </div>
     </div>

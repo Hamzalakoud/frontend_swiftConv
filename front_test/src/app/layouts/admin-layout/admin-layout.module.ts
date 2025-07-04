@@ -13,6 +13,7 @@ import { TableUserComponent } from '../../pages/table-user/table-user';
 import { NotificationsComponent } from '../../pages/notifications/notifications.component';
 import { UpgradeComponent } from '../../pages/upgrade/upgrade.component';
 import { MsgViewerComponent } from 'app/pages/msg-viewer/msg-viewer.component';
+import { HttpClientModule } from '@angular/common/http';
 
 import { TableComponent } from '../../pages/table/table.component'; 
 
@@ -29,7 +30,8 @@ import { ScMappingDirectoryComponent } from 'app/pages/sc-mapping-directory/sc-m
     RouterModule.forChild(AdminLayoutRoutes),
     FormsModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    HttpClientModule
     
   ],
   declarations: [

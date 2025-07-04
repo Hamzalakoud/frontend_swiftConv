@@ -59,6 +59,11 @@ errorMessage: any;
     this.scrollToTop();
   }
 
+  addUser(): void {
+    this.router.navigate(['/user-viewer', 0]); // Navigate to viewer in create mode
+  }
+
+
   scrollToTop(): void {
     if (this.topOfPage) {
       this.topOfPage.nativeElement.scrollIntoView({ behavior: 'smooth' });

@@ -33,6 +33,7 @@ import { MappingMtToMxComponent } from './pages/mapping-mt-to-mx/mapping-mt-to-m
     AppComponent,
     AdminLayoutComponent,
     
+    
   ],
   imports: [
     BrowserModule,

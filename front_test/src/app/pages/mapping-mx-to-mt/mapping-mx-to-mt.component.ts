@@ -48,6 +48,7 @@ export class MappingMxToMtComponent implements OnInit {
   };
   modalFormError: string | null = null;
   addModal: any;
+  editModal: any;
 
   constructor(private mappingService: MappingMxToMtService) {}
 
@@ -56,6 +57,7 @@ export class MappingMxToMtComponent implements OnInit {
 
     // Initialize Bootstrap modal (make sure Bootstrap JS loaded)
     this.addModal = new window.bootstrap.Modal(document.getElementById('addMappingModal'));
+    this.editModal = new window.bootstrap.Modal(document.getElementById('editMappingModal')); // For edit modal
   }
 
   loadMappings(): void {
@@ -145,12 +147,14 @@ export class MappingMxToMtComponent implements OnInit {
     this.isEditing = true;
     this.editingMapping = { ...mapping };
     this.formError = null;
+    this.editModal.show();  // Show the modal
   }
 
   cancelEdit(): void {
     this.isEditing = false;
     this.editingMapping = null;
     this.formError = null;
+    this.editModal.hide();  // Hide the modal
   }
 
   save(mappingForm: NgForm): void {

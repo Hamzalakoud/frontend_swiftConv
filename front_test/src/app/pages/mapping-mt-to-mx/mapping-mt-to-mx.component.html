@@ -1,11 +1,14 @@
+<!-- Mapping MT → MX Management Section -->
 <div #topOfPage></div>
 
 <div class="card">
   <div class="card-header">
     <h5 class="card-title">Mapping MT → MX Management</h5>
   </div>
+  
 
   <div class="card-body">
+    <!-- Filter Form -->
     <form (ngSubmit)="applyFilter()" class="mb-4">
       <div class="row">
         <div class="col-md-3">
@@ -45,9 +48,11 @@
       </div>
     </form>
 
+    <!-- Loading and Error Display -->
     <div *ngIf="isLoading" class="text-center p-3">Loading mappings...</div>
     <div *ngIf="error" class="text-danger p-3">{{ error }}</div>
 
+    <!-- Mappings Table -->
     <div class="table-responsive">
       <table class="table table-hover">
         <thead class="text-primary">
@@ -60,8 +65,6 @@
             <th>Function</th>
             <th>Niveau</th>
             <th>Actions</th>
-
-            
           </tr>
         </thead>
         <tbody>
@@ -84,6 +87,7 @@
         </tbody>
       </table>
 
+      <!-- Pagination -->
       <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
         <ul class="pagination">
           <li class="page-item" [class.disabled]="currentPage === 1">
@@ -97,6 +101,57 @@
           </li>
         </ul>
       </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Mapping Modal -->
+<div class="modal fade" id="editMappingModal" tabindex="-1" aria-labelledby="editMappingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editMappingModalLabel">Edit Mapping</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="editForm" (ngSubmit)="save()">
+          <div *ngIf="formError" class="alert alert-danger">{{ formError }}</div>
+
+          <div class="mb-3">
+            <label for="mtType" class="form-label">MT Type</label>
+            <input type="text" id="mtType" class="form-control" formControlName="mtType" />
+          </div>
+          <div class="mb-3">
+            <label for="mtTag" class="form-label">MT Tag</label>
+            <input type="text" id="mtTag" class="form-control" formControlName="mtTag" />
+          </div>
+          <div class="mb-3">
+            <label for="attribut" class="form-label">Attribut</label>
+            <input type="text" id="attribut" class="form-control" formControlName="attribut" />
+          </div>
+          <div class="mb-3">
+            <label for="mxType" class="form-label">MX Type</label>
+            <input type="text" id="mxType" class="form-control" formControlName="mxType" />
+          </div>
+          <div class="mb-3">
+            <label for="mxPath" class="form-label">MX Path</label>
+            <input type="text" id="mxPath" class="form-control" formControlName="mxPath" />
+          </div>
+          <div class="mb-3">
+            <label for="convFunc" class="form-label">Conversion Function</label>
+            <input type="text" id="convFunc" class="form-control" formControlName="convFunc" />
+          </div>
+          <div class="mb-3">
+            <label for="niveau" class="form-label">Niveau</label>
+            <input type="text" id="niveau" class="form-control" formControlName="niveau" />
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary ms-2" (click)="closeEditModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

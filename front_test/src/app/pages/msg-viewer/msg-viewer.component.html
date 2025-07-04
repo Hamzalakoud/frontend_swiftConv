@@ -12,14 +12,14 @@
 
     <div class="row mt-2" *ngIf="!isLoading && !error">
       <!-- MT Message -->
-      <div class="col-md-6 mt-2">
+      <div class="col-md-6">
         <h6 class="mb-2">MT Message</h6>
         <pre *ngIf="mtMsg" class="msg-box">{{ mtMsg }}</pre>
         <div *ngIf="!mtMsg" class="text-muted">No MT message content available.</div>
       </div>
 
       <!-- MX Message -->
-      <div class="col-md-6 ms-2">
+      <div class="col-md-6">
         <h6 class="mb-2">MX Message</h6>
         <pre *ngIf="mxMsg" class="msg-box">{{ mxMsg }}</pre>
         <div *ngIf="!mxMsg" class="text-muted">No MX message content available.</div>

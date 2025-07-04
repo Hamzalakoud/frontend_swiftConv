@@ -67,7 +67,6 @@
             />
             <div *ngIf="passwordInput.invalid && passwordInput.touched" class="error-message" style="color: #dc3545; font-size: 0.75rem; margin-top: 0.25rem; font-weight: 400;">
               <span *ngIf="passwordInput.errors?.['required']">Password is required</span>
-              <span *ngIf="passwordInput.errors?.['minlength']">Password must be at least 6 characters</span>
             </div>
           </div>
 

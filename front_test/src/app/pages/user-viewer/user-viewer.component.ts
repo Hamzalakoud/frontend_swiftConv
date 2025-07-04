@@ -25,23 +25,23 @@ export class UserViewerComponent implements OnInit {
   ngOnInit(): void {
     this.userId = Number(this.route.snapshot.paramMap.get('id'));
 
-    // Initialize form with empty/default values and validators
     this.userForm = this.fb.group({
-      company: [{ value: 'Creative Code Inc.', disabled: true }], // Static disabled field
-      username: ['', Validators.required],                        // Map to firstname for display
+      company: [{ value: 'Creative Code Inc.', disabled: true }],
+      username: [''],
       email: ['', [Validators.required, Validators.email]],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      role: ['', Validators.required],                           // Editable role field
-      status: [true],                                            // Checkbox for status
-      creationDate: [{ value: '', disabled: true }],             // Readonly creation date
-      lastUpdateDate: [{ value: '', disabled: true }]            // Readonly last update date
+      role: ['', Validators.required],
+      status: [true],
+      creationDate: [{ value: '', disabled: true }],
+      lastUpdateDate: [{ value: '', disabled: true }],
+      password: ['', Validators.minLength(6)]
     });
 
-    if (this.userId) {
+    if (this.userId && this.userId !== 0) {
       this.loadUser();
     } else {
-      this.errorMessage = 'No user ID provided.';
+      this.userId = 0; // Creation mode
     }
   }
 
@@ -50,20 +50,20 @@ export class UserViewerComponent implements OnInit {
     this.userService.getUserById(this.userId).subscribe({
       next: (user) => {
         this.userData = user;
-
-        // Patch form with loaded user data
         this.userForm.patchValue({
-          username: user.firstname, // username field is mapped to firstname
+          username: user.firstname,
           email: user.email,
           firstName: user.firstname,
           lastName: user.lastname,
           role: user.role,
-          status: user.status ?? false,  // fallback to false if null/undefined,
+          status: user.status ?? true,
           creationDate: user.creationDate ? new Date(user.creationDate).toLocaleString() : '',
           lastUpdateDate: user.lastUpdateDate ? new Date(user.lastUpdateDate).toLocaleString() : ''
         });
-
         this.isLoading = false;
+
+        // Automatically update status based on role (admin -> active, others -> inactive)
+        this.updateStatusBasedOnRole(user.role);
       },
       error: (err) => {
         this.errorMessage = 'Failed to load user data.';
@@ -73,36 +73,61 @@ export class UserViewerComponent implements OnInit {
     });
   }
 
+  // Update status based on the selected role
+  updateStatusBasedOnRole(role: string): void {
+    if (role === 'Admin' || role === 'Viewer' || role === 'Éditeur') {
+      this.userForm.patchValue({ status: true });
+    } else {
+      this.userForm.patchValue({ status: false });
+    }
+  }
+
   onSubmit(): void {
     if (this.userForm.invalid) {
       return;
     }
+
     this.isLoading = true;
 
-    // Build updated user request
-    const updatedUser: RegisterRequest = {
+    const request: RegisterRequest = {
       firstname: this.userForm.get('firstName')?.value,
       lastname: this.userForm.get('lastName')?.value,
       email: this.userForm.get('email')?.value,
-      password: '', // blank or add logic to update password if needed
+      password: this.userForm.get('password')?.value || '', // required for creation
       role: this.userForm.get('role')?.value,
       status: this.userForm.get('status')?.value
     };
 
-    this.userService.updateUser(this.userId, updatedUser).subscribe({
-      next: (res) => {
-        this.isLoading = false;
-        alert('User updated successfully!');
-        this.router.navigate(['/Table-user']); // redirect after successful update
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = 'Update failed. ' + (err.error?.message || err.message);
-        console.error(err);
-      }
-    });
+    if (this.userId === 0) {
+      // CREATE mode
+      this.userService.registerUser(request).subscribe({
+        next: () => {
+          this.isLoading = false;
+          alert('User created successfully!');
+          this.router.navigate(['/Table-user']);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = 'Creation failed. ' + (err.error?.message || err.message);
+          console.error(err);
+        }
+      });
+    } else {
+      // UPDATE mode
+      this.userService.updateUser(this.userId, request).subscribe({
+        next: () => {
+          this.isLoading = false;
+          alert('User updated successfully!');
+          this.router.navigate(['/Table-user']);
+        },
+        error: (err) => {
+          this.isLoading = false;
+          this.errorMessage = 'Update failed. ' + (err.error?.message || err.message);
+          console.error(err);
+        }
+      });
+    }
   }
-
 
   closeViewer(): void {
     this.router.navigate(['/Table-user']);

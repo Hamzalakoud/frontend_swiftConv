@@ -1,3 +1,4 @@
+<!-- Mapping MX → MT Management Section -->
 <div #topOfPage></div>
 
 <div class="card">
@@ -6,6 +7,7 @@
   </div>
 
   <div class="card-body">
+    <!-- Filter Form -->
     <form (ngSubmit)="applyFilter()" class="mb-4">
       <div class="row">
         <div class="col-md-3">
@@ -13,7 +15,7 @@
           <input type="text" class="form-control" [(ngModel)]="filter.tag" name="tag" placeholder="e.g. 32A" />
         </div>
         <div class="col-md-3">
-          <label>function</label>
+          <label>FONCTION</label>
           <input type="text" class="form-control" [(ngModel)]="filter.function" name="function" placeholder="e.g. convertCurrency" />
         </div>
         <div class="col-md-3">
@@ -45,9 +47,11 @@
       </div>
     </form>
 
+    <!-- Loading and Error Display -->
     <div *ngIf="isLoading" class="text-center p-3">Loading mappings...</div>
     <div *ngIf="error" class="text-danger p-3">{{ error }}</div>
 
+    <!-- Mappings Table -->
     <div class="table-responsive">
       <table class="table table-hover">
         <thead class="text-primary">
@@ -82,6 +86,7 @@
         </tbody>
       </table>
 
+      <!-- Pagination -->
       <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
         <ul class="pagination">
           <li class="page-item" [class.disabled]="currentPage === 1">

@@ -43,6 +43,7 @@ export class MappingMtToMxService {
     return this.http.post<ScMappingMtToMx>(this.baseUrl, entity, this.getAuthHeaders());
   }
 
+  
   update(id: number, entity: ScMappingMtToMx): Observable<ScMappingMtToMx> {
     return this.http.put<ScMappingMtToMx>(`${this.baseUrl}/${id}`, entity, this.getAuthHeaders());
   }
@@ -50,4 +51,5 @@ export class MappingMtToMxService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`, this.getAuthHeaders());
   }
+  
 }
