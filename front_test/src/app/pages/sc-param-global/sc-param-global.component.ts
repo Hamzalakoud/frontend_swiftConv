@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ScParamGlobalService, ScParamGlobal } from '../../services/sc-param-global.service';
-import { NgForm } from '@angular/forms';
 
-declare var window: any; // To access Bootstrap modal JS
+declare var window: any;
 
 @Component({
   selector: 'app-sc-param-global',
@@ -10,7 +10,6 @@ declare var window: any; // To access Bootstrap modal JS
   styleUrls: ['./sc-param-global.component.css']
 })
 export class ScParamGlobalComponent implements OnInit {
-
   params: ScParamGlobal[] = [];
   filteredParams: ScParamGlobal[] = [];
   isLoading = true;
@@ -26,26 +25,25 @@ export class ScParamGlobalComponent implements OnInit {
 
   @ViewChild('topOfPage') topOfPage!: ElementRef;
 
-  // For add/edit form
+  editForm: FormGroup;
   editingParam: ScParamGlobal | null = null;
   isEditing = false;
   formError: string | null = null;
+  editModal: any;
 
-  // For Add Modal
-  newParam: ScParamGlobal = {
-    element: '',
-    valeur: ''
-  };
-  modalFormError: string | null = null;
-  addModal: any;
-
-  constructor(private paramService: ScParamGlobalService) {}
+  constructor(
+    private paramService: ScParamGlobalService,
+    private fb: FormBuilder
+  ) {
+    this.editForm = this.fb.group({
+      element: ['', Validators.required],
+      valeur: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.loadParams();
-
-    // Initialize Bootstrap modal (make sure Bootstrap JS loaded)
-    this.addModal = new window.bootstrap.Modal(document.getElementById('addParamModal'));
+    this.editModal = new window.bootstrap.Modal(document.getElementById('editParamGlobal'));
   }
 
   loadParams(): void {
@@ -64,6 +62,56 @@ export class ScParamGlobalComponent implements OnInit {
     });
   }
 
+  startEdit(param: ScParamGlobal): void {
+    this.editingParam = { ...param };
+    this.isEditing = true;
+    this.editForm.patchValue(this.editingParam);
+    this.editModal.show();
+  }
+
+  closeEditModal(): void {
+    this.editModal.hide();
+    this.isEditing = false;
+    this.editingParam = null;
+    this.formError = null;
+  }
+
+  save(): void {
+    if (this.editForm.invalid) {
+      this.formError = 'Please fill all required fields.';
+      return;
+    }
+
+    this.formError = null;
+
+    if (this.editingParam?.id) {
+      const updatedParam = { ...this.editingParam, ...this.editForm.value };
+      this.paramService.update(this.editingParam.id, updatedParam).subscribe({
+        next: updated => {
+          const idx = this.params.findIndex(p => p.id === updated.id);
+          if (idx !== -1) {
+            this.params[idx] = updated;
+            this.applyFilter();
+          }
+          this.closeEditModal();
+        },
+        error: err => {
+          this.formError = 'Update failed.';
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredParams.length / this.pageSize);
+  }
+
+  get paginatedParams(): ScParamGlobal[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredParams.slice(start, start + this.pageSize);
+  }
+
   applyFilter(): void {
     const cleanFilter = Object.entries(this.filter).reduce((acc, [key, value]) => {
       acc[key] = value?.toString().trim().toLowerCase() || '';
@@ -73,10 +121,8 @@ export class ScParamGlobalComponent implements OnInit {
     this.filteredParams = this.params.filter(param => {
       return Object.entries(cleanFilter).every(([key, filterValue]) => {
         if (!filterValue) return true;
-
         let fieldValue = param[key as keyof ScParamGlobal];
         if (fieldValue === null || fieldValue === undefined) return false;
-
         return String(fieldValue).toLowerCase().includes(filterValue);
       });
     });
@@ -90,15 +136,6 @@ export class ScParamGlobalComponent implements OnInit {
     this.filteredParams = [...this.params];
     this.currentPage = 1;
     this.scrollToTop();
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.filteredParams.length / this.pageSize);
-  }
-
-  get paginatedParams(): ScParamGlobal[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.filteredParams.slice(start, start + this.pageSize);
   }
 
   goToPage(page: number): void {
@@ -115,76 +152,13 @@ export class ScParamGlobalComponent implements OnInit {
     }
   }
 
-  // CRUD methods
-
-  startCreate(): void {
-    this.isEditing = true;
-    this.editingParam = {
-      element: '',
-      valeur: ''
-    };
-    this.formError = null;
-  }
-
-  startEdit(param: ScParamGlobal): void {
-    this.isEditing = true;
-    this.editingParam = { ...param };
-    this.formError = null;
-  }
-
-  cancelEdit(): void {
-    this.isEditing = false;
-    this.editingParam = null;
-    this.formError = null;
-  }
-
-  save(paramForm: NgForm): void {
-    if (!this.editingParam) return;
-
-    if (paramForm.invalid) {
-      this.formError = 'Please fill all required fields correctly.';
-      return;
-    }
-
-    this.formError = null;
-
-    if ((this.editingParam as any).id) {
-      this.paramService.update((this.editingParam as any).id, this.editingParam).subscribe({
-        next: updated => {
-          const idx = this.params.findIndex(p => (p as any).id === (updated as any).id);
-          if (idx !== -1) {
-            this.params[idx] = updated;
-            this.applyFilter();
-          }
-          this.cancelEdit();
-        },
-        error: err => {
-          this.formError = 'Update failed.';
-          console.error(err);
-        }
-      });
-    } else {
-      this.paramService.create(this.editingParam).subscribe({
-        next: created => {
-          this.params.push(created);
-          this.applyFilter();
-          this.cancelEdit();
-        },
-        error: err => {
-          this.formError = 'Creation failed.';
-          console.error(err);
-        }
-      });
-    }
-  }
-
   delete(param: ScParamGlobal): void {
-    if (!(param as any).id) return;
+    if (!param.id) return;
     if (!confirm(`Delete parameter "${param.element}"?`)) return;
 
-    this.paramService.delete((param as any).id).subscribe({
+    this.paramService.delete(param.id).subscribe({
       next: () => {
-        this.params = this.params.filter(p => (p as any).id !== (param as any).id);
+        this.params = this.params.filter(p => p.id !== param.id);
         this.applyFilter();
       },
       error: err => {
@@ -193,40 +167,4 @@ export class ScParamGlobalComponent implements OnInit {
       }
     });
   }
-
-  // Modal handling for Add new param
-
-  openAddModal(): void {
-    this.newParam = {
-      element: '',
-      valeur: ''
-    };
-    this.modalFormError = null;
-    this.addModal.show();
-  }
-
-  closeAddModal(): void {
-    this.addModal.hide();
-  }
-
-  saveNewParam(form: NgForm): void {
-    if (form.invalid) {
-      this.modalFormError = 'Please fill all required fields.';
-      return;
-    }
-    this.modalFormError = null;
-
-    this.paramService.create(this.newParam).subscribe({
-      next: (created) => {
-        this.params.push(created);
-        this.applyFilter();
-        this.closeAddModal();
-      },
-      error: (err) => {
-        this.modalFormError = 'Failed to create parameter.';
-        console.error(err);
-      }
-    });
-  }
-
 }

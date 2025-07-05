@@ -9,7 +9,7 @@ export interface User {
   firstname: string;
   lastname: string;
   email: string;
-  password?: string;
+  password?: string;  // optional for User model
   role: string;
   status: boolean;
   creationDate: string;
@@ -20,7 +20,7 @@ export interface RegisterRequest {
   firstname: string;
   lastname: string;
   email: string;
-  password: string;
+  password?: string;  // <-- made optional here!
   role: string;
   status?: boolean;
 }

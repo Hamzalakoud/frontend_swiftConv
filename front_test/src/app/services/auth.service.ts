@@ -10,6 +10,7 @@ export interface AuthRequest {
 }
 
 export interface AuthResponse {
+  role: string; // changed to string for clarity
   token: string;
 }
 
@@ -29,9 +30,20 @@ export class AuthService {
   private isTokenExpiredSubject = new BehaviorSubject<boolean>(this.lastTokenExpiredStatus);
   tokenExpired$ = this.isTokenExpiredSubject.asObservable();
 
+  // Track user role in BehaviorSubject for reactive updates
+  private userRoleSubject = new BehaviorSubject<string | null>(null);
+  userRole$ = this.userRoleSubject.asObservable();
+
   constructor(private http: HttpClient, private router: Router) {
     this.startTokenMonitoring();
+    this.loadRoleFromStorage();
   }
+
+  private loadRoleFromStorage() {
+    const storedRole = localStorage.getItem('userRole');
+    this.userRoleSubject.next(storedRole);
+  }
+
 
   getToken(): string | null {
     return localStorage.getItem('authToken');
@@ -71,7 +83,9 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userEmail');
+    localStorage.removeItem('userRole');
     this.isTokenExpiredSubject.next(true);
+    this.userRoleSubject.next(null);
     this.router.navigate(['/signin']); // Redirect to signin page
   }
 
@@ -79,10 +93,22 @@ export class AuthService {
     return this.http.post<AuthResponse>(this.apiUrl, request);
   }
 
-  saveToken(token: string, email: string): void {
+  saveToken(token: string, email: string, role: string): void {
     localStorage.setItem('authToken', token);
     localStorage.setItem('userEmail', email);
+    localStorage.setItem('userRole', role);
+    this.userRoleSubject.next(role);
+
     this.lastTokenExpiredStatus = this.isTokenExpired();
     this.isTokenExpiredSubject.next(this.lastTokenExpiredStatus);
+  }
+
+  getUserRole(): string | null {
+    // Return current role or read from storage if needed
+    const role = this.userRoleSubject.value || localStorage.getItem('userRole');
+    if (role && this.userRoleSubject.value !== role) {
+      this.userRoleSubject.next(role);
+    }
+    return role;
   }
 }

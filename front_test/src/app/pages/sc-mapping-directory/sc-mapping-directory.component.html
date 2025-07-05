@@ -3,10 +3,10 @@
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h5 class="card-title mb-0">Mapping Directory Management</h5>
-    <!--<button class="btn btn-primary btn-sm" (click)="openAddModal()">Add New Mapping</button>-->
   </div>
 
   <div class="card-body">
+    <!-- Filter Form -->
     <form (ngSubmit)="applyFilter()" class="mb-4">
       <div class="row g-3">
         <div class="col-md-6">
@@ -39,9 +39,11 @@
       </div>
     </form>
 
+    <!-- Loading & Error -->
     <div *ngIf="isLoading" class="text-center p-3">Loading mapping directories...</div>
     <div *ngIf="error" class="text-danger p-3">{{ error }}</div>
 
+    <!-- Table -->
     <div class="table-responsive" *ngIf="!isLoading && !error">
       <table class="table table-hover">
         <thead class="text-primary">
@@ -66,6 +68,7 @@
         </tbody>
       </table>
 
+      <!-- Pagination -->
       <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
         <ul class="pagination">
           <li class="page-item" [class.disabled]="currentPage === 1">
@@ -87,102 +90,41 @@
   </div>
 </div>
 
-<!-- Add Modal -->
+<!-- Edit Modal -->
 <div
   class="modal fade"
-  id="addMappingModal"
+  id="editParamDirectory"
   tabindex="-1"
-  aria-labelledby="addMappingModalLabel"
+  aria-labelledby="editParamDirectoryLabel"
   aria-hidden="true"
 >
   <div class="modal-dialog modal-md">
     <div class="modal-content">
-      <form #addMappingForm="ngForm" (ngSubmit)="saveNewMapping(addMappingForm)">
+      <form [formGroup]="editForm" (ngSubmit)="save()">
         <div class="modal-header">
-          <h5 class="modal-title" id="addMappingModalLabel">Add New Mapping</h5>
-          <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            (click)="closeAddModal()"
-          ></button>
+          <h5 class="modal-title" id="editParamDirectoryLabel">Edit Mapping</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeEditModal()"></button>
         </div>
 
         <div class="modal-body">
+          <div *ngIf="formError" class="alert alert-danger">{{ formError }}</div>
+
           <div class="mb-3">
             <label for="repIn" class="form-label">REP IN *</label>
-            <input
-              type="text"
-              class="form-control"
-              id="repIn"
-              name="repIn"
-              required
-              [(ngModel)]="newMapping.repIn"
-            />
+            <input type="text" class="form-control" id="repIn" formControlName="repIn" />
           </div>
 
           <div class="mb-3">
             <label for="repOut" class="form-label">REP OUT *</label>
-            <input
-              type="text"
-              class="form-control"
-              id="repOut"
-              name="repOut"
-              required
-              [(ngModel)]="newMapping.repOut"
-            />
+            <input type="text" class="form-control" id="repOut" formControlName="repOut" />
           </div>
-
-          <div *ngIf="modalFormError" class="text-danger mt-2">{{ modalFormError }}</div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">
-            Cancel
-          </button>
           <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancel</button>
         </div>
       </form>
     </div>
-  </div>
-</div>
-
-<!-- Edit Form -->
-<div *ngIf="isEditing" class="card mt-4">
-  <div class="card-header">
-    <h5 class="card-title">{{ editingMapping?.id ? 'Edit Mapping' : 'Create Mapping' }}</h5>
-  </div>
-  <div class="card-body">
-    <form #editForm="ngForm" (ngSubmit)="save(editForm)">
-      <div class="mb-3">
-        <label for="editRepIn" class="form-label">REP IN *</label>
-        <input
-          type="text"
-          class="form-control"
-          id="editRepIn"
-          name="repIn"
-          required
-          [(ngModel)]="editingMapping!.repIn"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="editRepOut" class="form-label">REP OUT *</label>
-        <input
-          type="text"
-          class="form-control"
-          id="editRepOut"
-          name="repOut"
-          required
-          [(ngModel)]="editingMapping!.repOut"
-        />
-      </div>
-
-      <div *ngIf="formError" class="text-danger mb-3">{{ formError }}</div>
-
-      <button type="submit" class="btn btn-success me-2">Save</button>
-      <button type="button" class="btn btn-secondary" (click)="cancelEdit()">
-        Cancel
-      </button>
-    </form>
   </div>
 </div>

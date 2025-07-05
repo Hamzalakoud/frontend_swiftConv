@@ -32,7 +32,7 @@ export class UserViewerComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       role: ['', Validators.required],
-      status: [true],
+      status: [true], // used for binding
       creationDate: [{ value: '', disabled: true }],
       lastUpdateDate: [{ value: '', disabled: true }],
       password: ['', Validators.minLength(6)]
@@ -62,7 +62,6 @@ export class UserViewerComponent implements OnInit {
         });
         this.isLoading = false;
 
-        // Automatically update status based on role (admin -> active, others -> inactive)
         this.updateStatusBasedOnRole(user.role);
       },
       error: (err) => {
@@ -73,33 +72,52 @@ export class UserViewerComponent implements OnInit {
     });
   }
 
-  // Update status based on the selected role
+  // Normalize frontend role strings to backend expected format
+  normalizeRole(role: string): string {
+    const map: { [key: string]: string } = {
+      'Admin': 'admin',
+      'Éditeur': 'editeur',
+      'Editeur': 'editeur',
+      'Viewer': 'viewer',
+      'Visiteur': 'viewer',
+    };
+    return map[role] ? map[role] : role.toLowerCase();
+  }
+
   updateStatusBasedOnRole(role: string): void {
-    if (role === 'Admin' || role === 'Viewer' || role === 'Éditeur') {
+    const normalized = this.normalizeRole(role);
+    if (['admin', 'viewer', 'editeur'].includes(normalized)) {
       this.userForm.patchValue({ status: true });
     } else {
       this.userForm.patchValue({ status: false });
     }
   }
 
+  // Triggered when one of the status checkboxes is clicked
+  setStatus(value: boolean): void {
+    this.userForm.patchValue({ status: value });
+  }
+
   onSubmit(): void {
-    if (this.userForm.invalid) {
-      return;
-    }
+    if (this.userForm.invalid) return;
 
     this.isLoading = true;
+
+    const password = this.userForm.get('password')?.value;
 
     const request: RegisterRequest = {
       firstname: this.userForm.get('firstName')?.value,
       lastname: this.userForm.get('lastName')?.value,
       email: this.userForm.get('email')?.value,
-      password: this.userForm.get('password')?.value || '', // required for creation
-      role: this.userForm.get('role')?.value,
-      status: this.userForm.get('status')?.value
+      role: this.normalizeRole(this.userForm.get('role')?.value),
+      status: this.userForm.get('status')?.value,
     };
+    if (password && password.length >= 6) {
+      request.password = password;
+}
 
     if (this.userId === 0) {
-      // CREATE mode
+      // CREATE
       this.userService.registerUser(request).subscribe({
         next: () => {
           this.isLoading = false;
@@ -113,7 +131,7 @@ export class UserViewerComponent implements OnInit {
         }
       });
     } else {
-      // UPDATE mode
+      // UPDATE
       this.userService.updateUser(this.userId, request).subscribe({
         next: () => {
           this.isLoading = false;

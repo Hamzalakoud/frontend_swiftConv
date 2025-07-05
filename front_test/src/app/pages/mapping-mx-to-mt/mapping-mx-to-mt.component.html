@@ -1,4 +1,3 @@
-<!-- Mapping MX → MT Management Section -->
 <div #topOfPage></div>
 
 <div class="card">
@@ -11,32 +10,31 @@
     <form (ngSubmit)="applyFilter()" class="mb-4">
       <div class="row">
         <div class="col-md-3">
-          <label>TAG</label>
+          <label>Tag</label>
           <input type="text" class="form-control" [(ngModel)]="filter.tag" name="tag" placeholder="e.g. 32A" />
         </div>
         <div class="col-md-3">
-          <label>FONCTION</label>
+          <label>Function</label>
           <input type="text" class="form-control" [(ngModel)]="filter.function" name="function" placeholder="e.g. convertCurrency" />
         </div>
         <div class="col-md-3">
-          <label>PATH</label>
+          <label>Path</label>
           <input type="text" class="form-control" [(ngModel)]="filter.path" name="path" placeholder="e.g. /Document/..." />
         </div>
         <div class="col-md-3">
-          <label>ATTRIBUT</label>
+          <label>Attribut</label>
           <input type="text" class="form-control" [(ngModel)]="filter.attribut" name="attribut" placeholder="e.g. Currency" />
         </div>
-
         <div class="col-md-3 mt-3">
-          <label>MSG TYPE</label>
+          <label>Message Type</label>
           <input type="text" class="form-control" [(ngModel)]="filter.msgType" name="msgType" placeholder="e.g. pacs.008" />
         </div>
         <div class="col-md-3 mt-3">
-          <label>SENS</label>
+          <label>Sens</label>
           <input type="text" class="form-control" [(ngModel)]="filter.sens" name="sens" placeholder="e.g. IN" />
         </div>
         <div class="col-md-3 mt-3">
-          <label>ORDRE</label>
+          <label>Ordre</label>
           <input type="text" class="form-control" [(ngModel)]="filter.ordre" name="ordre" placeholder="e.g. 1" />
         </div>
       </div>
@@ -47,22 +45,22 @@
       </div>
     </form>
 
-    <!-- Loading and Error Display -->
+    <!-- Loading and Error -->
     <div *ngIf="isLoading" class="text-center p-3">Loading mappings...</div>
     <div *ngIf="error" class="text-danger p-3">{{ error }}</div>
 
-    <!-- Mappings Table -->
+    <!-- Table -->
     <div class="table-responsive">
       <table class="table table-hover">
         <thead class="text-primary">
           <tr>
-            <th>TAG</th>
-            <th>FONCTION</th>
-            <th>PATH</th>
-            <th>ATTRIBUT</th>
-            <th>MSG TYPE</th>
-            <th>SENS</th>
-            <th>ORDRE</th>
+            <th>Tag</th>
+            <th>Function</th>
+            <th>Path</th>
+            <th>Attribut</th>
+            <th>Message Type</th>
+            <th>Sens</th>
+            <th>Ordre</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -92,7 +90,11 @@
           <li class="page-item" [class.disabled]="currentPage === 1">
             <button class="page-link" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
           </li>
-          <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [class.active]="currentPage === i + 1">
+          <li
+            class="page-item"
+            *ngFor="let page of [].constructor(totalPages); let i = index"
+            [class.active]="currentPage === i + 1"
+          >
             <button class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</button>
           </li>
           <li class="page-item" [class.disabled]="currentPage === totalPages">
@@ -104,66 +106,70 @@
   </div>
 </div>
 
-<!-- Add Mapping Modal -->
-<div class="modal fade" id="addMappingModal" tabindex="-1" aria-labelledby="addMappingModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<!-- Edit Modal -->
+<div
+  class="modal fade"
+  id="editMappingModalMxToMt"
+  tabindex="-1"
+  aria-labelledby="editMappingModalMxToMtLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
     <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editMappingModalMxToMtLabel">Edit Mapping</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="editForm" (ngSubmit)="save()">
+          <div *ngIf="formError" class="alert alert-danger">{{ formError }}</div>
 
-      <form #addMappingForm="ngForm" (ngSubmit)="saveNewMapping(addMappingForm)">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addMappingModalLabel">Add New Mapping</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeAddModal()"></button>
-        </div>
-
-        <div class="modal-body">
-          <div class="row g-3">
-
-            <div class="col-md-6">
-              <label for="tag" class="form-label">TAG *</label>
-              <input type="text" class="form-control" id="tag" name="tag" required [(ngModel)]="newMapping.tag" />
-            </div>
-
-            <div class="col-md-6">
-              <label for="function" class="form-label">FONCTION *</label>
-              <input type="text" class="form-control" id="function" name="function" required [(ngModel)]="newMapping.function" />
-            </div>
-
-            <div class="col-md-6">
-              <label for="path" class="form-label">PATH</label>
-              <input type="text" class="form-control" id="path" name="path" [(ngModel)]="newMapping.path" />
-            </div>
-
-            <div class="col-md-6">
-              <label for="attribut" class="form-label">ATTRIBUT</label>
-              <input type="text" class="form-control" id="attribut" name="attribut" [(ngModel)]="newMapping.attribut" />
-            </div>
-
-            <div class="col-md-6">
-              <label for="msgType" class="form-label">MSG TYPE</label>
-              <input type="text" class="form-control" id="msgType" name="msgType" [(ngModel)]="newMapping.msgType" />
-            </div>
-
-            <div class="col-md-6">
-              <label for="sens" class="form-label">SENS</label>
-              <input type="text" class="form-control" id="sens" name="sens" [(ngModel)]="newMapping.sens" />
-            </div>
-
-            <div class="col-md-6">
-              <label for="ordre" class="form-label">ORDRE</label>
-              <input type="text" class="form-control" id="ordre" name="ordre" [(ngModel)]="newMapping.ordre" />
-            </div>
-
+          <div class="mb-3">
+            <label for="tag" class="form-label">Tag</label>
+            <input type="text" id="tag" class="form-control" formControlName="tag" />
+          </div>
+          <div class="mb-3">
+            <label for="function" class="form-label">Function</label>
+            <input
+              type="text"
+              id="function"
+              class="form-control"
+              formControlName="function"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="path" class="form-label">Path</label>
+            <input type="text" id="path" class="form-control" formControlName="path" />
+          </div>
+          <div class="mb-3">
+            <label for="attribut" class="form-label">Attribut</label>
+            <input type="text" id="attribut" class="form-control" formControlName="attribut" />
+          </div>
+          <div class="mb-3">
+            <label for="msgType" class="form-label">Message Type</label>
+            <input type="text" id="msgType" class="form-control" formControlName="msgType" />
+          </div>
+          <div class="mb-3">
+            <label for="sens" class="form-label">Sens</label>
+            <input type="text" id="sens" class="form-control" formControlName="sens" />
+          </div>
+          <div class="mb-3">
+            <label for="ordre" class="form-label">Ordre</label>
+            <input type="text" id="ordre" class="form-control" formControlName="ordre" />
           </div>
 
-          <div *ngIf="modalFormError" class="text-danger mt-2">{{ modalFormError }}</div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Mapping</button>
-        </div>
-      </form>
-
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button
+              type="button"
+              class="btn btn-secondary ms-2"
+              (click)="closeEditModal()"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

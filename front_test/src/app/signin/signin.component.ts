@@ -54,7 +54,8 @@ export class SigninComponent implements OnInit, OnDestroy {
       next: (response) => {
         this.isLoading = false;
 
-        this.authService.saveToken(response.token, this.email.trim());
+        // Save token, email, AND role
+        this.authService.saveToken(response.token, this.email.trim(), response.role);
 
         this.router.navigate(['/dashboard']).catch(err => {
           console.error('Navigation error:', err);

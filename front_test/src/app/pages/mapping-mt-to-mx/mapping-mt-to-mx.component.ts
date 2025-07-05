@@ -56,7 +56,7 @@ export class MappingMtToMxComponent implements OnInit {
   ngOnInit(): void {
     this.loadMappings();
     // Initialize Bootstrap modal
-    this.editModal = new window.bootstrap.Modal(document.getElementById('editMappingModal'));
+    this.editModal = new window.bootstrap.Modal(document.getElementById('editMappingModalMtToMx'));
   }
 
   loadMappings(): void {

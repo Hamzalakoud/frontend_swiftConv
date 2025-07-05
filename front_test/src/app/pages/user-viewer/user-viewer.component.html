@@ -80,16 +80,36 @@
               Role is required.
             </div>
           </div>
-          <!-- Status -->
-          <div class="form-group" style="margin-left: 30px;">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              formControlName="status"
-              id="statusCheckbox"
-            />
-            <label class="form-check-label ms-2" for="statusCheckbox">Status Active</label>
-          </div>
+<!-- Status -->
+<div class="form-group mb-3">
+  <label>Status</label>
+  <div class="form-check">
+    <input
+      type="radio"
+      id="statusYes"
+      class="form-check-input"
+      style="margin-left: 10px;"
+      formControlName="status"
+      [value]="true"
+      name="statusOptions"
+    />
+    <label class="form-check-label" for="statusYes">Yes</label>
+  </div>
+  <div class="form-check">
+    <input
+      type="radio"
+      id="statusNo"
+      class="form-check-input"
+      style="margin-left: 10px;"
+      formControlName="status"
+      [value]="false"
+      name="statusOptions"
+    />
+    <label class="form-check-label" for="statusNo">No</label>
+  </div>
+</div>
+
+
 
           <!-- Password -->
           <div class="form-group mb-3">

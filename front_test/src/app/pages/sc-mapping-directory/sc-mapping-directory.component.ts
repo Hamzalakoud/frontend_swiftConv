@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ScMappingDirectoryService, ScMappingDirectory } from '../../services/sc-mapping-directory.service';
 
-declare var window: any; // To access Bootstrap modal JS
+declare var window: any;
 
 @Component({
   selector: 'app-sc-mapping-directory',
@@ -10,7 +10,6 @@ declare var window: any; // To access Bootstrap modal JS
   styleUrls: ['./sc-mapping-directory.component.css']
 })
 export class ScMappingDirectoryComponent implements OnInit {
-
   mappings: ScMappingDirectory[] = [];
   filteredMappings: ScMappingDirectory[] = [];
   isLoading = true;
@@ -26,12 +25,12 @@ export class ScMappingDirectoryComponent implements OnInit {
 
   @ViewChild('topOfPage') topOfPage!: ElementRef;
 
-  // For add/edit form
+  editForm: FormGroup;
   editingMapping: ScMappingDirectory | null = null;
   isEditing = false;
   formError: string | null = null;
+  editModal: any;
 
-  // For Add Modal
   newMapping: ScMappingDirectory = {
     repIn: '',
     repOut: ''
@@ -39,11 +38,20 @@ export class ScMappingDirectoryComponent implements OnInit {
   modalFormError: string | null = null;
   addModal: any;
 
-  constructor(private mappingService: ScMappingDirectoryService) {}
+  constructor(
+    private mappingService: ScMappingDirectoryService,
+    private fb: FormBuilder
+  ) {
+    this.editForm = this.fb.group({
+      repIn: ['', Validators.required],
+      repOut: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     this.loadMappings();
-    this.addModal = new window.bootstrap.Modal(document.getElementById('addMappingModal'));
+    //this.addModal = new window.bootstrap.Modal(document.getElementById('addMappingModal'));
+    this.editModal = new window.bootstrap.Modal(document.getElementById('editParamDirectory'));
   }
 
   loadMappings(): void {
@@ -110,62 +118,41 @@ export class ScMappingDirectoryComponent implements OnInit {
     }
   }
 
-  // CRUD methods
-
-  startCreate(): void {
-    this.isEditing = true;
-    this.editingMapping = {
-      repIn: '',
-      repOut: ''
-    };
-    this.formError = null;
-  }
-
   startEdit(mapping: ScMappingDirectory): void {
-    this.isEditing = true;
     this.editingMapping = { ...mapping };
-    this.formError = null;
+    this.isEditing = true;
+    this.editForm.patchValue(this.editingMapping);
+    this.editModal.show();
   }
 
-  cancelEdit(): void {
+  closeEditModal(): void {
+    this.editModal.hide();
     this.isEditing = false;
     this.editingMapping = null;
     this.formError = null;
   }
 
-  save(form: NgForm): void {
-    if (!this.editingMapping) return;
-
-    if (form.invalid) {
-      this.formError = 'Please fill all required fields correctly.';
+  save(): void {
+    if (this.editForm.invalid) {
+      this.formError = 'Please fill all required fields.';
       return;
     }
+
     this.formError = null;
 
-    if ((this.editingMapping as any).id) {
-      this.mappingService.update((this.editingMapping as any).id, this.editingMapping).subscribe({
+    if (this.editingMapping?.id) {
+      const updatedMapping = { ...this.editingMapping, ...this.editForm.value };
+      this.mappingService.update(this.editingMapping.id, updatedMapping).subscribe({
         next: updated => {
-          const idx = this.mappings.findIndex(p => (p as any).id === (updated as any).id);
+          const idx = this.mappings.findIndex(p => p.id === updated.id);
           if (idx !== -1) {
             this.mappings[idx] = updated;
             this.applyFilter();
           }
-          this.cancelEdit();
+          this.closeEditModal();
         },
         error: err => {
           this.formError = 'Update failed.';
-          console.error(err);
-        }
-      });
-    } else {
-      this.mappingService.create(this.editingMapping).subscribe({
-        next: created => {
-          this.mappings.push(created);
-          this.applyFilter();
-          this.cancelEdit();
-        },
-        error: err => {
-          this.formError = 'Creation failed.';
           console.error(err);
         }
       });
@@ -173,12 +160,12 @@ export class ScMappingDirectoryComponent implements OnInit {
   }
 
   delete(mapping: ScMappingDirectory): void {
-    if (!(mapping as any).id) return;
+    if (!mapping.id) return;
     if (!confirm(`Delete mapping REP_IN "${mapping.repIn}"?`)) return;
 
-    this.mappingService.delete((mapping as any).id).subscribe({
+    this.mappingService.delete(mapping.id).subscribe({
       next: () => {
-        this.mappings = this.mappings.filter(p => (p as any).id !== (mapping as any).id);
+        this.mappings = this.mappings.filter(p => p.id !== mapping.id);
         this.applyFilter();
       },
       error: err => {
@@ -187,8 +174,6 @@ export class ScMappingDirectoryComponent implements OnInit {
       }
     });
   }
-
-  // Modal handling for Add new mapping
 
   openAddModal(): void {
     this.newMapping = {
@@ -203,7 +188,7 @@ export class ScMappingDirectoryComponent implements OnInit {
     this.addModal.hide();
   }
 
-  saveNewMapping(form: NgForm): void {
+  saveNewMapping(form: any): void {
     if (form.invalid) {
       this.modalFormError = 'Please fill all required fields.';
       return;
@@ -222,5 +207,4 @@ export class ScMappingDirectoryComponent implements OnInit {
       }
     });
   }
-
 }
