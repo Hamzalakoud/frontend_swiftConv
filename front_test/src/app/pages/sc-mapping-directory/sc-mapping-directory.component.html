@@ -7,37 +7,42 @@
 
   <div class="card-body">
     <!-- Filter Form -->
-    <form (ngSubmit)="applyFilter()" class="mb-4">
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label for="filterRepIn">REP IN</label>
-          <input
-            id="filterRepIn"
-            type="text"
-            class="form-control"
-            [(ngModel)]="filter.repIn"
-            name="repIn"
-            placeholder="e.g. /input/dir"
-          />
-        </div>
-        <div class="col-md-6">
-          <label for="filterRepOut">REP OUT</label>
-          <input
-            id="filterRepOut"
-            type="text"
-            class="form-control"
-            [(ngModel)]="filter.repOut"
-            name="repOut"
-            placeholder="e.g. /output/dir"
-          />
-        </div>
+  <form (ngSubmit)="applyFilter()" class="mb-4">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label for="filterRepIn">REP IN</label>
+        <input
+          id="filterRepIn"
+          type="text"
+          class="form-control"
+          [(ngModel)]="filter.repIn"
+          name="repIn"
+          placeholder="e.g. /input/dir"
+        />
       </div>
+      <div class="col-md-6">
+        <label for="filterRepOut">REP OUT</label>
+        <input
+          id="filterRepOut"
+          type="text"
+          class="form-control"
+          [(ngModel)]="filter.repOut"
+          name="repOut"
+          placeholder="e.g. /output/dir"
+        />
+      </div>
+    </div>
 
-      <div class="d-flex justify-content-end gap-2 mt-3">
+    <!-- Correct Button Layout -->
+    <div class="d-flex justify-content-between align-items-center gap-2 mt-3">
+      <button type="button" class="btn btn-success btn-sm me-2" (click)="openAddModal()"><i class="nc-icon nc-simple-add"></i> Add File</button>
+      <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
         <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Reset</button>
       </div>
-    </form>
+    </div>
+  </form>
+
 
     <!-- Loading & Error -->
     <div *ngIf="isLoading" class="text-center p-3">Loading mapping directories...</div>
@@ -123,6 +128,57 @@
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Save</button>
           <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div
+  class="modal fade"
+  id="addParamDirectory"
+  tabindex="-1"
+  aria-labelledby="addParamDirectoryLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <form [formGroup]="addForm" (ngSubmit)="saveNewMapping()">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addParamDirectoryLabel">Add New Mapping</h5>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeAddModal()"></button>
+        </div>
+
+        <div class="modal-body">
+          <div *ngIf="addFormError" class="alert alert-danger">{{ addFormError }}</div>
+
+          <div class="mb-3">
+            <label for="repInAdd" class="form-label">REP IN *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="repInAdd"
+              formControlName="repIn"
+              placeholder="e.g. /input/dir"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="repOutAdd" class="form-label">REP OUT *</label>
+            <input
+              type="text"
+              class="form-control"
+              id="repOutAdd"
+              formControlName="repOut"
+              placeholder="e.g. /output/dir"
+            />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Cancel</button>
         </div>
       </form>
     </div>

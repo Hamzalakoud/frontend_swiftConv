@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // <-- Import Reactive form modules
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MappingMtToMxService, ScMappingMtToMx } from '../../services/mapping-mt-to-mx.service';
 
 declare var window: any;
@@ -30,7 +30,6 @@ export class MappingMtToMxComponent implements OnInit {
 
   @ViewChild('topOfPage') topOfPage!: ElementRef;
 
-  // Reactive form initialization
   editForm: FormGroup;
   editingMapping: ScMappingMtToMx | null = null;
   isEditing = false;
@@ -39,9 +38,8 @@ export class MappingMtToMxComponent implements OnInit {
 
   constructor(
     private mappingService: MappingMtToMxService,
-    private fb: FormBuilder // <-- Inject FormBuilder to create the form group
+    private fb: FormBuilder
   ) {
-    // Initialize the form with default values and validation rules
     this.editForm = this.fb.group({
       mtType: ['', Validators.required],
       mtTag: ['', Validators.required],
@@ -55,7 +53,6 @@ export class MappingMtToMxComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadMappings();
-    // Initialize Bootstrap modal
     this.editModal = new window.bootstrap.Modal(document.getElementById('editMappingModalMtToMx'));
   }
 
@@ -76,12 +73,17 @@ export class MappingMtToMxComponent implements OnInit {
   }
 
   startEdit(mapping: ScMappingMtToMx): void {
-    // Clone the mapping to avoid mutation and populate the form
     this.editingMapping = { ...mapping };
     this.isEditing = true;
-    // Set form values for editing
     this.editForm.patchValue(this.editingMapping);
-    // Show the modal
+    this.editModal.show();
+  }
+
+  startCreate(): void {
+    this.editingMapping = null;
+    this.isEditing = true;
+    this.editForm.reset();
+    this.formError = null;
     this.editModal.show();
   }
 
@@ -116,10 +118,22 @@ export class MappingMtToMxComponent implements OnInit {
           console.error(err);
         }
       });
+    } else {
+      const newMapping = this.editForm.value as ScMappingMtToMx;
+      this.mappingService.create(newMapping).subscribe({
+        next: created => {
+          this.mappings.push(created);
+          this.applyFilter();
+          this.closeEditModal();
+        },
+        error: err => {
+          this.formError = 'Creation failed.';
+          console.error(err);
+        }
+      });
     }
   }
 
-  // Pagination logic
   get totalPages(): number {
     return Math.ceil(this.filteredMappings.length / this.pageSize);
   }
@@ -167,5 +181,21 @@ export class MappingMtToMxComponent implements OnInit {
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  }
+
+  delete(mapping: ScMappingMtToMx): void {
+    if (!mapping.id) return;
+    if (!confirm(`Delete mapping MT "${mapping.mtType}" Tag "${mapping.mtTag}"?`)) return;
+
+    this.mappingService.delete(mapping.id).subscribe({
+      next: () => {
+        this.mappings = this.mappings.filter(m => m.id !== mapping.id);
+        this.applyFilter();
+      },
+      error: err => {
+        alert('Delete failed.');
+        console.error(err);
+      }
+    });
   }
 }

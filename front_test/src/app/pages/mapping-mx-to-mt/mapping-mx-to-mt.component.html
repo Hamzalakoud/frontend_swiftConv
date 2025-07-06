@@ -39,9 +39,12 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-end gap-2 mt-3">
-        <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
-        <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Reset</button>
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <button type="button" class="btn btn-success btn-sm me-2" (click)="startCreate()"><i class="nc-icon nc-simple-add"></i> Add File</button>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Reset</button>
+        </div>
       </div>
     </form>
 
@@ -106,7 +109,7 @@
   </div>
 </div>
 
-<!-- Edit Modal -->
+<!-- Edit/Add Modal -->
 <div
   class="modal fade"
   id="editMappingModalMxToMt"
@@ -116,17 +119,25 @@
 >
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editMappingModalMxToMtLabel">Edit Mapping</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="editForm" (ngSubmit)="save()">
+      <form [formGroup]="editForm" (ngSubmit)="save()">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editMappingModalMxToMtLabel">
+            {{ editingMapping?.id ? 'Edit Mapping' : 'Add New Mapping' }}
+          </h5>
+          <button type="button" class="btn-close" (click)="closeEditModal()"></button>
+        </div>
+        <div class="modal-body">
           <div *ngIf="formError" class="alert alert-danger">{{ formError }}</div>
 
           <div class="mb-3">
             <label for="tag" class="form-label">Tag</label>
-            <input type="text" id="tag" class="form-control" formControlName="tag" />
+            <input
+              type="text"
+              id="tag"
+              class="form-control"
+              formControlName="tag"
+              placeholder="e.g. 32A"
+            />
           </div>
           <div class="mb-3">
             <label for="function" class="form-label">Function</label>
@@ -135,41 +146,65 @@
               id="function"
               class="form-control"
               formControlName="function"
+              placeholder="e.g. convertCurrency"
             />
           </div>
           <div class="mb-3">
             <label for="path" class="form-label">Path</label>
-            <input type="text" id="path" class="form-control" formControlName="path" />
+            <input
+              type="text"
+              id="path"
+              class="form-control"
+              formControlName="path"
+              placeholder="e.g. /Document/..."
+            />
           </div>
           <div class="mb-3">
             <label for="attribut" class="form-label">Attribut</label>
-            <input type="text" id="attribut" class="form-control" formControlName="attribut" />
+            <input
+              type="text"
+              id="attribut"
+              class="form-control"
+              formControlName="attribut"
+              placeholder="e.g. Currency"
+            />
           </div>
           <div class="mb-3">
             <label for="msgType" class="form-label">Message Type</label>
-            <input type="text" id="msgType" class="form-control" formControlName="msgType" />
+            <input
+              type="text"
+              id="msgType"
+              class="form-control"
+              formControlName="msgType"
+              placeholder="e.g. pacs.008"
+            />
           </div>
           <div class="mb-3">
             <label for="sens" class="form-label">Sens</label>
-            <input type="text" id="sens" class="form-control" formControlName="sens" />
+            <input
+              type="text"
+              id="sens"
+              class="form-control"
+              formControlName="sens"
+              placeholder="e.g. IN"
+            />
           </div>
           <div class="mb-3">
             <label for="ordre" class="form-label">Ordre</label>
-            <input type="text" id="ordre" class="form-control" formControlName="ordre" />
+            <input
+              type="text"
+              id="ordre"
+              class="form-control"
+              formControlName="ordre"
+              placeholder="e.g. 1"
+            />
           </div>
-
-          <div class="d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary">Save</button>
-            <button
-              type="button"
-              class="btn btn-secondary ms-2"
-              (click)="closeEditModal()"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancel</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

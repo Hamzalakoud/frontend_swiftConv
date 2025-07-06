@@ -31,12 +31,9 @@ export class ScMappingDirectoryComponent implements OnInit {
   formError: string | null = null;
   editModal: any;
 
-  newMapping: ScMappingDirectory = {
-    repIn: '',
-    repOut: ''
-  };
-  modalFormError: string | null = null;
+  addForm: FormGroup;
   addModal: any;
+  addFormError: string | null = null;
 
   constructor(
     private mappingService: ScMappingDirectoryService,
@@ -46,12 +43,17 @@ export class ScMappingDirectoryComponent implements OnInit {
       repIn: ['', Validators.required],
       repOut: ['', Validators.required]
     });
+
+    this.addForm = this.fb.group({
+      repIn: ['', Validators.required],
+      repOut: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
     this.loadMappings();
-    //this.addModal = new window.bootstrap.Modal(document.getElementById('addMappingModal'));
     this.editModal = new window.bootstrap.Modal(document.getElementById('editParamDirectory'));
+    this.addModal = new window.bootstrap.Modal(document.getElementById('addParamDirectory'));
   }
 
   loadMappings(): void {
@@ -175,12 +177,10 @@ export class ScMappingDirectoryComponent implements OnInit {
     });
   }
 
+  // --- Add new mapping modal methods ---
   openAddModal(): void {
-    this.newMapping = {
-      repIn: '',
-      repOut: ''
-    };
-    this.modalFormError = null;
+    this.addForm.reset();
+    this.addFormError = null;
     this.addModal.show();
   }
 
@@ -188,21 +188,23 @@ export class ScMappingDirectoryComponent implements OnInit {
     this.addModal.hide();
   }
 
-  saveNewMapping(form: any): void {
-    if (form.invalid) {
-      this.modalFormError = 'Please fill all required fields.';
+  saveNewMapping(): void {
+    if (this.addForm.invalid) {
+      this.addFormError = 'Please fill all required fields.';
       return;
     }
-    this.modalFormError = null;
+    this.addFormError = null;
 
-    this.mappingService.create(this.newMapping).subscribe({
-      next: (created) => {
+    const newMapping: ScMappingDirectory = this.addForm.value;
+
+    this.mappingService.create(newMapping).subscribe({
+      next: created => {
         this.mappings.push(created);
         this.applyFilter();
         this.closeAddModal();
       },
-      error: (err) => {
-        this.modalFormError = 'Failed to create mapping.';
+      error: err => {
+        this.addFormError = 'Failed to create mapping.';
         console.error(err);
       }
     });

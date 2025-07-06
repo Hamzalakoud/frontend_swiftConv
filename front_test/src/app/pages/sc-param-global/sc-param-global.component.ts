@@ -31,6 +31,13 @@ export class ScParamGlobalComponent implements OnInit {
   formError: string | null = null;
   editModal: any;
 
+  newParam: ScParamGlobal = {
+    element: '',
+    valeur: ''
+  };
+  addModal: any;
+  modalFormError: string | null = null;
+
   constructor(
     private paramService: ScParamGlobalService,
     private fb: FormBuilder
@@ -44,6 +51,7 @@ export class ScParamGlobalComponent implements OnInit {
   ngOnInit(): void {
     this.loadParams();
     this.editModal = new window.bootstrap.Modal(document.getElementById('editParamGlobal'));
+    this.addModal = new window.bootstrap.Modal(document.getElementById('addParamGlobalModal'));
   }
 
   loadParams(): void {
@@ -103,13 +111,49 @@ export class ScParamGlobalComponent implements OnInit {
     }
   }
 
-  get totalPages(): number {
-    return Math.ceil(this.filteredParams.length / this.pageSize);
+  delete(param: ScParamGlobal): void {
+    if (!param.id) return;
+    if (!confirm(`Delete parameter "${param.element}"?`)) return;
+
+    this.paramService.delete(param.id).subscribe({
+      next: () => {
+        this.params = this.params.filter(p => p.id !== param.id);
+        this.applyFilter();
+      },
+      error: err => {
+        alert('Delete failed.');
+        console.error(err);
+      }
+    });
   }
 
-  get paginatedParams(): ScParamGlobal[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.filteredParams.slice(start, start + this.pageSize);
+  openAddModal(): void {
+    this.newParam = { element: '', valeur: '' };
+    this.modalFormError = null;
+    this.addModal.show();
+  }
+
+  closeAddModal(): void {
+    this.addModal.hide();
+  }
+
+  saveNewParam(form: any): void {
+    if (!this.newParam.element || !this.newParam.valeur) {
+      this.modalFormError = 'Please fill all required fields.';
+      return;
+    }
+
+    this.paramService.create(this.newParam).subscribe({
+      next: (created) => {
+        this.params.push(created);
+        this.applyFilter();
+        this.closeAddModal();
+      },
+      error: (err) => {
+        this.modalFormError = 'Failed to create parameter.';
+        console.error(err);
+      }
+    });
   }
 
   applyFilter(): void {
@@ -152,19 +196,12 @@ export class ScParamGlobalComponent implements OnInit {
     }
   }
 
-  delete(param: ScParamGlobal): void {
-    if (!param.id) return;
-    if (!confirm(`Delete parameter "${param.element}"?`)) return;
+  get totalPages(): number {
+    return Math.ceil(this.filteredParams.length / this.pageSize);
+  }
 
-    this.paramService.delete(param.id).subscribe({
-      next: () => {
-        this.params = this.params.filter(p => p.id !== param.id);
-        this.applyFilter();
-      },
-      error: err => {
-        alert('Delete failed.');
-        console.error(err);
-      }
-    });
+  get paginatedParams(): ScParamGlobal[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.filteredParams.slice(start, start + this.pageSize);
   }
 }

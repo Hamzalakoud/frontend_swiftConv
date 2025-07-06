@@ -64,7 +64,15 @@ export class SigninComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.isLoading = false;
         console.error('Login error:', err);
-        this.errorMessage = 'Invalid email or password.';
+
+        if (err.status === 401) {
+          // Show detailed backend error message if available
+          this.errorMessage = err.error?.error || 'Unauthorized: Invalid credentials or inactive account.';
+        } else if (err.status === 400) {
+          this.errorMessage = 'Bad request. Please check your input.';
+        } else {
+          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+        }
       }
     });
   }

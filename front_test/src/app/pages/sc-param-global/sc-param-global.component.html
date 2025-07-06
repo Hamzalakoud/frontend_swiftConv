@@ -1,17 +1,18 @@
 <div #topOfPage></div>
 
 <div class="card">
-  <div class="card-header">
-    <h5 class="card-title">Param Global Management</h5>
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="card-title mb-0">Param Global Management</h5>
   </div>
 
   <div class="card-body">
     <!-- Filter Form -->
     <form (ngSubmit)="applyFilter()" class="mb-4">
-      <div class="row">
+      <div class="row g-3">
         <div class="col-md-6">
-          <label>Element</label>
+          <label for="filterElement">Element</label>
           <input
+            id="filterElement"
             type="text"
             class="form-control"
             [(ngModel)]="filter.element"
@@ -20,8 +21,9 @@
           />
         </div>
         <div class="col-md-6">
-          <label>Valeur</label>
+          <label for="filterValeur">Valeur</label>
           <input
+            id="filterValeur"
             type="text"
             class="form-control"
             [(ngModel)]="filter.valeur"
@@ -31,31 +33,35 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-end gap-2 mt-3">
+    <!-- Correct Button Layout -->
+    <div class="d-flex justify-content-between align-items-center gap-2 mt-3">
+      <button type="button" class="btn btn-success btn-sm me-2" (click)="openAddModal()"><i class="nc-icon nc-simple-add"></i> Add Parameter</button>
+      <div class="d-flex gap-2">
         <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
         <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Reset</button>
       </div>
+    </div>
     </form>
 
-    <!-- Loading and Error -->
+    <!-- Loading & Error -->
     <div *ngIf="isLoading" class="text-center p-3">Loading parameters...</div>
     <div *ngIf="error" class="text-danger p-3">{{ error }}</div>
 
     <!-- Table -->
-    <div class="table-responsive">
+    <div class="table-responsive" *ngIf="!isLoading && !error">
       <table class="table table-hover">
         <thead class="text-primary">
           <tr>
             <th>Element</th>
             <th>Valeur</th>
-            <th>Actions</th>
+            <th class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let param of paginatedParams">
             <td>{{ param.element }}</td>
             <td>{{ param.valeur }}</td>
-            <td>
+            <td class="text-center">
               <button class="btn btn-sm btn-primary me-2" (click)="startEdit(param)">Edit</button>
               <button class="btn btn-sm btn-danger" (click)="delete(param)">Delete</button>
             </td>
@@ -70,7 +76,7 @@
       <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
         <ul class="pagination">
           <li class="page-item" [class.disabled]="currentPage === 1">
-            <button class="page-link" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+            <button class="page-link" (click)="goToPage(currentPage - 1)">Previous</button>
           </li>
           <li
             class="page-item"
@@ -80,7 +86,7 @@
             <button class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</button>
           </li>
           <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <button class="page-link" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+            <button class="page-link" (click)="goToPage(currentPage + 1)">Next</button>
           </li>
         </ul>
       </nav>
@@ -89,23 +95,16 @@
 </div>
 
 <!-- Edit Modal -->
-<div
-  class="modal fade"
-  id="editParamGlobal"
-  tabindex="-1"
-  aria-labelledby="editParamGlobalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="editParamGlobal" tabindex="-1" aria-labelledby="editParamGlobalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form [formGroup]="editForm" (ngSubmit)="save()">
         <div class="modal-header">
           <h5 class="modal-title" id="editParamGlobalLabel">Edit Parameter</h5>
-          <button type="button" class="btn-close" (click)="closeEditModal()" aria-label="Close"></button>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeEditModal()"></button>
         </div>
         <div class="modal-body">
           <div *ngIf="formError" class="alert alert-danger">{{ formError }}</div>
-
           <div class="mb-3">
             <label for="element" class="form-label">Element</label>
             <input type="text" id="element" class="form-control" formControlName="element" />
@@ -118,6 +117,49 @@
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Save</button>
           <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal fade" id="addParamGlobalModal" tabindex="-1" aria-labelledby="addParamGlobalModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form (ngSubmit)="saveNewParam(addForm)" #addForm="ngForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addParamGlobalModalLabel">Add Parameter</h5>
+          <button type="button" class="btn-close" (click)="closeAddModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="modalFormError" class="alert alert-danger">{{ modalFormError }}</div>
+          <div class="mb-3">
+            <label for="newElement" class="form-label">Element</label>
+            <input
+              type="text"
+              class="form-control"
+              id="newElement"
+              required
+              [(ngModel)]="newParam.element"
+              name="newElement"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="newValeur" class="form-label">Valeur</label>
+            <input
+              type="text"
+              class="form-control"
+              id="newValeur"
+              required
+              [(ngModel)]="newParam.valeur"
+              name="newValeur"
+            />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Add</button>
+          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Cancel</button>
         </div>
       </form>
     </div>

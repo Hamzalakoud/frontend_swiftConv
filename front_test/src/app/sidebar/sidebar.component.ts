@@ -67,12 +67,11 @@ export class SidebarComponent implements OnInit {
   private getMenuForRole(role: string | null): RouteInfo[] {
     if (!role) return [];
 
-    if (role === 'admin') {
-      // Admin: full menu expanded
-      const adminMenu = JSON.parse(JSON.stringify(this.fullMenu)); // deep clone
-      adminMenu.forEach(menu => this.expandAll(menu));
-      return adminMenu;
-    }
+  if (role === 'admin') {
+    // Admin: full menu collapsed (default open is false)
+    return JSON.parse(JSON.stringify(this.fullMenu));
+  }
+
 
     if (role === 'editeur') {
       // Editeur: Dashboard + Consultation SWIFT + Conversion submenu expanded

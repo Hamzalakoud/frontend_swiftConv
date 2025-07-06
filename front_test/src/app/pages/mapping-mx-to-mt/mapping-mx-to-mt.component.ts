@@ -113,6 +113,35 @@ export class MappingMxToMtComponent implements OnInit {
     }
   }
 
+  delete(mapping: ScMappingMxToMt): void {
+    if (!mapping.id) {
+      console.error('Cannot delete mapping without ID');
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete mapping with tag "${mapping.tag}"?`)) {
+      return;
+    }
+
+    this.mappingService.delete(mapping.id).subscribe({
+      next: () => {
+        // Remove from full list
+        this.mappings = this.mappings.filter(m => m.id !== mapping.id);
+        // Remove from filtered list
+        this.filteredMappings = this.filteredMappings.filter(m => m.id !== mapping.id);
+        // Adjust pagination if needed
+        if (this.currentPage > this.totalPages) {
+          this.currentPage = this.totalPages;
+        }
+        this.scrollToTop();
+      },
+      error: err => {
+        console.error('Delete failed:', err);
+        alert('Failed to delete the mapping.');
+      }
+    });
+  }
+
   get totalPages(): number {
     return Math.ceil(this.filteredMappings.length / this.pageSize);
   }
@@ -160,5 +189,13 @@ export class MappingMxToMtComponent implements OnInit {
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  }
+
+  // --- New method to start creating a new mapping ---
+  startCreate(): void {
+    this.editingMapping = null;
+    this.isEditing = false;
+    this.editForm.reset();
+    this.editModal.show();
   }
 }
