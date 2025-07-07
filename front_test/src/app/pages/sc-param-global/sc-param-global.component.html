@@ -2,22 +2,22 @@
 
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="card-title mb-0">Param Global Management</h5>
+    <h5 class="card-title mb-0">Gestion des Paramètres Globaux</h5>
   </div>
 
   <div class="card-body">
-    <!-- Filter Form -->
+    <!-- Formulaire de filtre -->
     <form (ngSubmit)="applyFilter()" class="mb-4">
       <div class="row g-3">
         <div class="col-md-6">
-          <label for="filterElement">Element</label>
+          <label for="filterElement">Élément</label>
           <input
             id="filterElement"
             type="text"
             class="form-control"
             [(ngModel)]="filter.element"
             name="element"
-            placeholder="e.g. IN or OUT"
+            placeholder="ex. IN ou OUT"
           />
         </div>
         <div class="col-md-6">
@@ -28,31 +28,33 @@
             class="form-control"
             [(ngModel)]="filter.valeur"
             name="valeur"
-            placeholder="e.g. /path/to/dir"
+            placeholder="ex. /chemin/vers/dossier"
           />
         </div>
       </div>
 
-    <!-- Correct Button Layout -->
-    <div class="d-flex justify-content-between align-items-center gap-2 mt-3">
-      <button type="button" class="btn btn-success btn-sm me-2" (click)="openAddModal()"><i class="nc-icon nc-simple-add"></i> Add Parameter</button>
-      <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
-        <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Reset</button>
+      <!-- Boutons -->
+      <div class="d-flex justify-content-between align-items-center gap-2 mt-3">
+        <button type="button" class="btn btn-success btn-sm me-2" (click)="openAddModal()">
+          <i class="nc-icon nc-simple-add"></i> Ajouter un paramètre
+        </button>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary btn-sm">Appliquer le filtre</button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Réinitialiser</button>
+        </div>
       </div>
-    </div>
     </form>
 
-    <!-- Loading & Error -->
-    <div *ngIf="isLoading" class="text-center p-3">Loading parameters...</div>
+    <!-- Chargement & erreur -->
+    <div *ngIf="isLoading" class="text-center p-3">Chargement des paramètres...</div>
     <div *ngIf="error" class="text-danger p-3">{{ error }}</div>
 
-    <!-- Table -->
+    <!-- Tableau -->
     <div class="table-responsive" *ngIf="!isLoading && !error">
       <table class="table table-hover">
         <thead class="text-primary">
           <tr>
-            <th>Element</th>
+            <th>Élément</th>
             <th>Valeur</th>
             <th class="text-center">Actions</th>
           </tr>
@@ -62,12 +64,12 @@
             <td>{{ param.element }}</td>
             <td>{{ param.valeur }}</td>
             <td class="text-center">
-              <button class="btn btn-sm btn-primary me-2" (click)="startEdit(param)">Edit</button>
-              <button class="btn btn-sm btn-danger" (click)="delete(param)">Delete</button>
+              <button class="btn btn-sm btn-primary me-2" (click)="startEdit(param)">Modifier</button>
+              <button class="btn btn-sm btn-danger" (click)="delete(param)">Supprimer</button>
             </td>
           </tr>
           <tr *ngIf="filteredParams.length === 0">
-            <td colspan="3" class="text-center text-muted">No matching parameters found.</td>
+            <td colspan="3" class="text-center text-muted">Aucun paramètre correspondant trouvé.</td>
           </tr>
         </tbody>
       </table>
@@ -76,17 +78,13 @@
       <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
         <ul class="pagination">
           <li class="page-item" [class.disabled]="currentPage === 1">
-            <button class="page-link" (click)="goToPage(currentPage - 1)">Previous</button>
+            <button class="page-link" (click)="goToPage(currentPage - 1)">Précédent</button>
           </li>
-          <li
-            class="page-item"
-            *ngFor="let page of [].constructor(totalPages); let i = index"
-            [class.active]="currentPage === i + 1"
-          >
+          <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [class.active]="currentPage === i + 1">
             <button class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</button>
           </li>
           <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <button class="page-link" (click)="goToPage(currentPage + 1)">Next</button>
+            <button class="page-link" (click)="goToPage(currentPage + 1)">Suivant</button>
           </li>
         </ul>
       </nav>
@@ -94,19 +92,19 @@
   </div>
 </div>
 
-<!-- Edit Modal -->
+<!-- Modal Modification -->
 <div class="modal fade" id="editParamGlobal" tabindex="-1" aria-labelledby="editParamGlobalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form [formGroup]="editForm" (ngSubmit)="save()">
         <div class="modal-header">
-          <h5 class="modal-title" id="editParamGlobalLabel">Edit Parameter</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeEditModal()"></button>
+          <h5 class="modal-title" id="editParamGlobalLabel">Modifier le paramètre</h5>
+          <button type="button" class="btn-close" aria-label="Fermer" (click)="closeEditModal()"></button>
         </div>
         <div class="modal-body">
           <div *ngIf="formError" class="alert alert-danger">{{ formError }}</div>
           <div class="mb-3">
-            <label for="element" class="form-label">Element</label>
+            <label for="element" class="form-label">Élément</label>
             <input type="text" id="element" class="form-control" formControlName="element" />
           </div>
           <div class="mb-3">
@@ -115,27 +113,27 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save</button>
-          <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+          <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Annuler</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<!-- Add Modal -->
+<!-- Modal Ajout -->
 <div class="modal fade" id="addParamGlobalModal" tabindex="-1" aria-labelledby="addParamGlobalModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form (ngSubmit)="saveNewParam(addForm)" #addForm="ngForm">
         <div class="modal-header">
-          <h5 class="modal-title" id="addParamGlobalModalLabel">Add Parameter</h5>
-          <button type="button" class="btn-close" (click)="closeAddModal()" aria-label="Close"></button>
+          <h5 class="modal-title" id="addParamGlobalModalLabel">Ajouter un paramètre</h5>
+          <button type="button" class="btn-close" (click)="closeAddModal()" aria-label="Fermer"></button>
         </div>
         <div class="modal-body">
           <div *ngIf="modalFormError" class="alert alert-danger">{{ modalFormError }}</div>
           <div class="mb-3">
-            <label for="newElement" class="form-label">Element</label>
+            <label for="newElement" class="form-label">Élément</label>
             <input
               type="text"
               class="form-control"
@@ -158,8 +156,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Add</button>
-          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Cancel</button>
+          <button type="submit" class="btn btn-success">Ajouter</button>
+          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Annuler</button>
         </div>
       </form>
     </div>

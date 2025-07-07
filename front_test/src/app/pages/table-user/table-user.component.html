@@ -1,71 +1,70 @@
 <!-- table-user.component.html -->
 <div class="card">
-<div class="card-header d-flex justify-content-between align-items-center">
-  <h5 class="card-title mb-0">User Management</h5>
-</div>
-
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="card-title mb-0">Gestion des Utilisateurs</h5>
+  </div>
 
   <div class="card-body">
     <form (ngSubmit)="applyFilter()" class="mb-4">
       <div class="row">
         <div class="col-md-3">
-          <label>First Name</label>
-          <input type="text" class="form-control" [(ngModel)]="filter.firstname" name="firstname" placeholder="e.g. John" />
+          <label>Prénom</label>
+          <input type="text" class="form-control" [(ngModel)]="filter.firstname" name="firstname" placeholder="ex. Jean" />
         </div>
         <div class="col-md-3">
-          <label>Last Name</label>
-          <input type="text" class="form-control" [(ngModel)]="filter.lastname" name="lastname" placeholder="e.g. Doe" />
+          <label>Nom</label>
+          <input type="text" class="form-control" [(ngModel)]="filter.lastname" name="lastname" placeholder="ex. Dupont" />
         </div>
         <div class="col-md-3">
           <label>Email</label>
-          <input type="text" class="form-control" [(ngModel)]="filter.email" name="email" placeholder="e.g. john@example.com" />
+          <input type="text" class="form-control" [(ngModel)]="filter.email" name="email" placeholder="ex. jean@example.com" />
         </div>
         <div class="col-md-3">
-          <label>Role</label>
-          <input type="text" class="form-control" [(ngModel)]="filter.role" name="role" placeholder="e.g. ADMIN" />
+          <label>Rôle</label>
+          <input type="text" class="form-control" [(ngModel)]="filter.role" name="role" placeholder="ex. ADMIN" />
         </div>
         <div class="col-md-2">
-          <label>Status</label>
+          <label>Statut</label>
           <input type="text" class="form-control" [(ngModel)]="filter.status" name="status" placeholder="true / false" />
         </div>
 
         <div class="col-md-2">
-          <label>Creation Date</label>
-          <input type="text" class="form-control" [(ngModel)]="filter.creationDate" name="creationDate" placeholder="YYYY-MM-DD" />
+          <label>Date de Création</label>
+          <input type="text" class="form-control" [(ngModel)]="filter.creationDate" name="creationDate" placeholder="AAAA-MM-JJ" />
         </div>
         <div class="col-md-2">
-          <label>Last Update</label>
-          <input type="text" class="form-control" [(ngModel)]="filter.lastUpdateDate" name="lastUpdateDate" placeholder="YYYY-MM-DD" />
+          <label>Dernière Mise à Jour</label>
+          <input type="text" class="form-control" [(ngModel)]="filter.lastUpdateDate" name="lastUpdateDate" placeholder="AAAA-MM-JJ" />
         </div>
       </div>
+
       <div class="d-flex justify-content-between align-items-center mt-3">
         <div>
           <button type="button" class="btn btn-success btn-sm me-2" (click)="addUser()">
-            <i class="nc-icon nc-simple-add"></i> Add User
+            <i class="nc-icon nc-simple-add"></i> Ajouter un utilisateur
           </button>
         </div>
         <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
-          <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Reset</button>
+          <button type="submit" class="btn btn-primary btn-sm">Appliquer le filtre</button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Réinitialiser</button>
         </div>
       </div>
-
     </form>
 
-    <div *ngIf="isLoading" class="text-center p-3">Loading users...</div>
+    <div *ngIf="isLoading" class="text-center p-3">Chargement des utilisateurs...</div>
     <div *ngIf="error" class="text-danger p-3">{{ error }}</div>
 
     <div class="table-responsive">
       <table class="table table-hover">
         <thead class="text-primary">
           <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>Prénom</th>
+            <th>Nom</th>
             <th>Email</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Creation Date</th>
-            <th>Last Update</th>
+            <th>Rôle</th>
+            <th>Statut</th>
+            <th>Date de création</th>
+            <th>Dernière mise à jour</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
@@ -78,18 +77,18 @@
             <td>{{ user.status }}</td>
             <td>{{ user.creationDate | date: 'short' }}</td>
             <td>{{ user.lastUpdateDate | date: 'short' }}</td>
-<td class="text-center">
-  <button class="btn btn-link p-0" (click)="viewUser(user.id)" title="View User" style="font-size: 1.4rem; margin-right: 12px;">
-    <i class="nc-icon nc-alert-circle-i"></i>
-  </button>
-  <button 
-    type="button" class="btn btn-link p-0" (click)="delete(user)" title="Delete Mapping" style="font-size: 1.4rem;">
-    <i class="nc-icon nc-simple-remove text-danger"></i>
-  </button>
-</td>
-
+            <td class="text-center">
+              <button class="btn btn-link p-0" (click)="viewUser(user.id)" title="Voir l'utilisateur" style="font-size: 1.4rem; margin-right: 12px;">
+                <i class="nc-icon nc-alert-circle-i"></i>
+              </button>
+              <button 
+                type="button" class="btn btn-link p-0" (click)="delete(user)" title="Supprimer l'utilisateur" style="font-size: 1.4rem;">
+                <i class="nc-icon nc-simple-remove text-danger"></i>
+              </button>
+            </td>
+          </tr>
           <tr *ngIf="filteredUsers.length === 0">
-            <td colspan="8" class="text-center text-muted">No matching users found.</td>
+            <td colspan="8" class="text-center text-muted">Aucun utilisateur correspondant trouvé.</td>
           </tr>
         </tbody>
       </table>
@@ -97,13 +96,13 @@
       <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
         <ul class="pagination">
           <li class="page-item" [class.disabled]="currentPage === 1">
-            <button class="page-link" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+            <button class="page-link" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Précédent</button>
           </li>
           <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [class.active]="currentPage === i + 1">
             <button class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</button>
           </li>
           <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <button class="page-link" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+            <button class="page-link" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Suivant</button>
           </li>
         </ul>
       </nav>

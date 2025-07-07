@@ -10,7 +10,7 @@
           </div>
           <div class="col-7 col-md-8">
             <div class="numbers">
-              <p class="card-category">Messages converti</p>
+              <p class="card-category">Messages convertis</p>
               <p class="card-title">{{ totalConvertedDay }}</p>
             </div>
           </div>
@@ -19,7 +19,7 @@
       <div class="card-footer ">
         <hr>
         <div class="stats">
-          <i class="fa fa-calendar-o"></i> Per Day
+          <i class="fa fa-calendar-o"></i> Par jour
         </div>
       </div>
     </div>
@@ -36,7 +36,7 @@
           </div>
           <div class="col-7 col-md-8">
             <div class="numbers">
-              <p class="card-category">Messages Non converti</p>
+              <p class="card-category">Messages non convertis</p>
               <p class="card-title">{{ totalNSConvertDay }}</p>
             </div>
           </div>
@@ -45,7 +45,7 @@
       <div class="card-footer ">
         <hr>
         <div class="stats">
-          <i class="fa fa-calendar-o"></i> Per Day
+          <i class="fa fa-calendar-o"></i> Par jour
         </div>
       </div>
     </div>
@@ -62,7 +62,7 @@
           </div>
           <div class="col-7 col-md-8">
             <div class="numbers">
-              <p class="card-category">Messages rejete</p>
+              <p class="card-category">Messages rejetés</p>
               <p class="card-title">{{ totalFailedDay }}</p>
             </div>
           </div>
@@ -71,7 +71,7 @@
       <div class="card-footer ">
         <hr>
         <div class="stats">
-          <i class="fa fa-calendar-o"></i> Per Day
+          <i class="fa fa-calendar-o"></i> Par jour
         </div>
       </div>
     </div>
@@ -83,16 +83,16 @@
   <div class="col-md-8">
     <div class="card card-chart">
       <div class="card-header">
-        <h5 class="card-title">Weekly Message Status</h5>
-        <p class="card-category">Converted vs NC vs Failed (Bar Chart)</p>
+        <h5 class="card-title">Statut hebdomadaire des messages</h5>
+        <p class="card-category">Convertis vs Non convertis vs Rejetés (Graphique à barres)</p>
       </div>
       <div class="card-body">
-        <canvas id="speedChart" width="400" height="108.6"></canvas>
+        <canvas id="speedChart" width="400" height="125"></canvas>
       </div>
       <div class="card-footer">
         <hr/>
         <div class="card-stats">
-          <i class="fa fa-calendar"></i> Per Week
+          <i class="fa fa-calendar"></i> Par semaine
         </div>
       </div>
     </div>
@@ -102,26 +102,23 @@
   <div class="col-md-4">
     <div class="card ">
       <div class="card-header ">
-        <h5 class="card-title">Message Weekly Status</h5>
-        <p class="card-category">Converted vs NS vs Failed</p>
+        <h5 class="card-title">Statut hebdomadaire des messages</h5>
+        <p class="card-category">Convertis vs Non convertis vs Rejetés</p>
       </div>
       <div class="card-body ">
         <canvas id="MessageStatus"></canvas>
       </div>
       <div class="card-footer ">
         <div class="legend">
-          <i class="fa fa-circle" style="color:#2ecc71"></i> Converted
-          <i class="fa fa-circle" style="color:#f39c12"></i> NS
-          <i class="fa fa-circle" style="color:#e74c3c"></i> Failed
+          <i class="fa fa-circle" style="color:#2ecc71"></i> Convertis
+          <i class="fa fa-circle" style="color:#f39c12"></i> Non convertis
+          <i class="fa fa-circle" style="color:#e74c3c"></i> Rejetés
         </div>
         <hr>
         <div class="stats">
-          <i class="fa fa-calendar"></i> Data from current week
+          <i class="fa fa-calendar"></i> Données de la semaine en cours
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
-

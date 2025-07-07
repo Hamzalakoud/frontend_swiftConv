@@ -2,53 +2,54 @@
 
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="card-title mb-0">Mapping Directory Management</h5>
+    <h5 class="card-title mb-0">Gestion des Répertoires de Mapping</h5>
   </div>
 
   <div class="card-body">
-    <!-- Filter Form -->
-  <form (ngSubmit)="applyFilter()" class="mb-4">
-    <div class="row g-3">
-      <div class="col-md-6">
-        <label for="filterRepIn">REP IN</label>
-        <input
-          id="filterRepIn"
-          type="text"
-          class="form-control"
-          [(ngModel)]="filter.repIn"
-          name="repIn"
-          placeholder="e.g. /input/dir"
-        />
+    <!-- Formulaire de filtre -->
+    <form (ngSubmit)="applyFilter()" class="mb-4">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="filterRepIn">Répertoire d'entrée (REP IN)</label>
+          <input
+            id="filterRepIn"
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.repIn"
+            name="repIn"
+            placeholder="ex. /repertoire/entree"
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="filterRepOut">Répertoire de sortie (REP OUT)</label>
+          <input
+            id="filterRepOut"
+            type="text"
+            class="form-control"
+            [(ngModel)]="filter.repOut"
+            name="repOut"
+            placeholder="ex. /repertoire/sortie"
+          />
+        </div>
       </div>
-      <div class="col-md-6">
-        <label for="filterRepOut">REP OUT</label>
-        <input
-          id="filterRepOut"
-          type="text"
-          class="form-control"
-          [(ngModel)]="filter.repOut"
-          name="repOut"
-          placeholder="e.g. /output/dir"
-        />
+
+      <!-- Boutons -->
+      <div class="d-flex justify-content-between align-items-center gap-2 mt-3">
+        <button type="button" class="btn btn-success btn-sm me-2" (click)="openAddModal()">
+          <i class="nc-icon nc-simple-add"></i> Ajouter un répertoire
+        </button>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary btn-sm">Appliquer le filtre</button>
+          <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Réinitialiser</button>
+        </div>
       </div>
-    </div>
+    </form>
 
-    <!-- Correct Button Layout -->
-    <div class="d-flex justify-content-between align-items-center gap-2 mt-3">
-      <button type="button" class="btn btn-success btn-sm me-2" (click)="openAddModal()"><i class="nc-icon nc-simple-add"></i> Add File</button>
-      <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
-        <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Reset</button>
-      </div>
-    </div>
-  </form>
-
-
-    <!-- Loading & Error -->
-    <div *ngIf="isLoading" class="text-center p-3">Loading mapping directories...</div>
+    <!-- Chargement & erreurs -->
+    <div *ngIf="isLoading" class="text-center p-3">Chargement des répertoires de mapping...</div>
     <div *ngIf="error" class="text-danger p-3">{{ error }}</div>
 
-    <!-- Table -->
+    <!-- Tableau -->
     <div class="table-responsive" *ngIf="!isLoading && !error">
       <table class="table table-hover">
         <thead class="text-primary">
@@ -63,12 +64,12 @@
             <td>{{ item.repIn }}</td>
             <td>{{ item.repOut }}</td>
             <td class="text-center">
-              <button class="btn btn-sm btn-primary me-2" (click)="startEdit(item)">Edit</button>
-              <button class="btn btn-sm btn-danger" (click)="delete(item)">Delete</button>
+              <button class="btn btn-sm btn-primary me-2" (click)="startEdit(item)">Modifier</button>
+              <button class="btn btn-sm btn-danger" (click)="delete(item)">Supprimer</button>
             </td>
           </tr>
           <tr *ngIf="filteredMappings.length === 0">
-            <td colspan="3" class="text-center text-muted">No matching items found.</td>
+            <td colspan="3" class="text-center text-muted">Aucun élément correspondant trouvé.</td>
           </tr>
         </tbody>
       </table>
@@ -77,7 +78,7 @@
       <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
         <ul class="pagination">
           <li class="page-item" [class.disabled]="currentPage === 1">
-            <button class="page-link" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Previous</button>
+            <button class="page-link" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Précédent</button>
           </li>
           <li
             class="page-item"
@@ -87,7 +88,7 @@
             <button class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</button>
           </li>
           <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <button class="page-link" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Next</button>
+            <button class="page-link" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Suivant</button>
           </li>
         </ul>
       </nav>
@@ -95,7 +96,7 @@
   </div>
 </div>
 
-<!-- Edit Modal -->
+<!-- Modal Modifier -->
 <div
   class="modal fade"
   id="editParamDirectory"
@@ -107,8 +108,8 @@
     <div class="modal-content">
       <form [formGroup]="editForm" (ngSubmit)="save()">
         <div class="modal-header">
-          <h5 class="modal-title" id="editParamDirectoryLabel">Edit Mapping</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeEditModal()"></button>
+          <h5 class="modal-title" id="editParamDirectoryLabel">Modifier le Mapping</h5>
+          <button type="button" class="btn-close" aria-label="Fermer" (click)="closeEditModal()"></button>
         </div>
 
         <div class="modal-body">
@@ -126,15 +127,15 @@
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save</button>
-          <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+          <button type="button" class="btn btn-secondary" (click)="closeEditModal()">Annuler</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-<!-- Add Modal -->
+<!-- Modal Ajouter -->
 <div
   class="modal fade"
   id="addParamDirectory"
@@ -146,8 +147,8 @@
     <div class="modal-content">
       <form [formGroup]="addForm" (ngSubmit)="saveNewMapping()">
         <div class="modal-header">
-          <h5 class="modal-title" id="addParamDirectoryLabel">Add New Mapping</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="closeAddModal()"></button>
+          <h5 class="modal-title" id="addParamDirectoryLabel">Ajouter un nouveau Mapping</h5>
+          <button type="button" class="btn-close" aria-label="Fermer" (click)="closeAddModal()"></button>
         </div>
 
         <div class="modal-body">
@@ -160,7 +161,7 @@
               class="form-control"
               id="repInAdd"
               formControlName="repIn"
-              placeholder="e.g. /input/dir"
+              placeholder="ex. /repertoire/entree"
             />
           </div>
 
@@ -171,14 +172,14 @@
               class="form-control"
               id="repOutAdd"
               formControlName="repOut"
-              placeholder="e.g. /output/dir"
+              placeholder="ex. /repertoire/sortie"
             />
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save</button>
-          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Annuler</button>
         </div>
       </form>
     </div>

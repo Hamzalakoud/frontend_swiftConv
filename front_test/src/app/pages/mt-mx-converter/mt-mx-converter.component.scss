@@ -1,0 +1,39 @@
+.drop-zone {
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 15px;
+  background-color: #fafafa;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+    background-color: #e9f5ff;
+  }
+
+  &.drag-over {
+    background-color: #d0ebff;
+    border-color: #339af0;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 500;
+    color: #666;
+  }
+}
+
+.msg-box {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  white-space: pre-wrap;
+  font-family: monospace;
+  height: 300px;
+  overflow: auto;
+}

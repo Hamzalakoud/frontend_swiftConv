@@ -1,0 +1,12 @@
+html, body {
+  height: 100%;
+  overflow-x: hidden;   /* no horizontal scroll ever */
+  overflow-y: auto;     /* vertical scroll only if needed */
+}
+
+.wrapper, .main-panel, .content {
+  min-height: 100vh;    /* at least full viewport height */
+  height: auto;         /* grow as needed */
+  overflow: visible;    /* no internal scrollbars */
+  
+}

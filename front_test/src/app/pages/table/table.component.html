@@ -1,41 +1,41 @@
 <div class="card">
 
   <div class="card-header">
-    <h5 class="card-title">SC_CONVERSION Messages</h5>
+    <h5 class="card-title">Messages SC_CONVERSION</h5>
   </div>
 
-  <!-- FILTER FORM -->
+  <!-- FILTRE -->
   <div class="card-body">
     <form (ngSubmit)="applyFilter()" class="mb-4">
       <div class="row">
         <div class="col-md-3">
-          <label>Filename</label>
+          <label>Nom de fichier</label>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="filter.filename"
             name="filename"
-            placeholder="e.g. file.xml"
+            placeholder="ex. fichier.xml"
           />
         </div>
         <div class="col-md-2">
-          <label>Message Category</label>
+          <label>Catégorie de message</label>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="filter.msgCateg"
             name="msgCateg"
-            placeholder="e.g. FIN"
+            placeholder="ex. FIN"
           />
         </div>
         <div class="col-md-2">
-          <label>Message Type</label>
+          <label>Type de message</label>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="filter.msgType"
             name="msgType"
-            placeholder="e.g. MT103"
+            placeholder="ex. MT103"
           />
         </div>
         <div class="col-md-2 ">
@@ -45,7 +45,7 @@
             class="form-control"
             [(ngModel)]="filter.bicEm"
             name="bicEm"
-            placeholder="e.g. BICEMXXX"
+            placeholder="ex. BICEMXXX"
           />
         </div>
         <div class="col-md-2">
@@ -55,7 +55,7 @@
             class="form-control"
             [(ngModel)]="filter.bicDe"
             name="bicDe"
-            placeholder="e.g. BICDEXXX"
+            placeholder="ex. BICDEXXX"
           />
         </div>
         <div class="col-md-3 ">
@@ -65,37 +65,37 @@
             class="form-control"
             [(ngModel)]="filter.uertr"
             name="uertr"
-            placeholder="e.g. 12345678"
+            placeholder="ex. 12345678"
           />
         </div>
         <div class="col-md-2">
-          <label>Amount</label>
+          <label>Montant</label>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="filter.amount"
             name="amount"
-            placeholder="e.g. 1000"
+            placeholder="ex. 1000"
           />
         </div>
         <div class="col-md-2 ">
-          <label>Currency</label>
+          <label>Devise</label>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="filter.currency"
             name="currency"
-            placeholder="e.g. USD"
+            placeholder="ex. USD"
           />
         </div>
         <div class="col-md-2">
-          <label>Customer Account</label>
+          <label>Compte client</label>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="filter.customerAccount"
             name="customerAccount"
-            placeholder="e.g. 1234567890"
+            placeholder="ex. 1234567890"
           />
         </div>
         <div class="col-md-2 ">
@@ -105,17 +105,17 @@
             class="form-control"
             [(ngModel)]="filter.tag71A"
             name="tag71A"
-            placeholder="e.g. OUR"
+            placeholder="ex. OUR"
           />
         </div>
         <div class="col-md-2">
-          <label>Status</label>
+          <label>Statut</label>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="filter.status"
             name="status"
-            placeholder="e.g. PENDING"
+            placeholder="ex. EN ATTENTE"
           />
         </div>
         <div class="col-md-2">
@@ -125,36 +125,36 @@
             class="form-control"
             [(ngModel)]="filter.sens"
             name="sens"
-            placeholder="e.g. IN/OUT"
+            placeholder="ex. ENTRANT/SORTANT"
           />
         </div>
         <div class="col-md-2 ">
-          <label>To Convert</label>
+          <label>À convertir</label>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="filter.toConvert"
             name="toConvert"
-            placeholder="e.g. YES/NO"
+            placeholder="ex. OUI/NON"
           />
         </div>
         <div class="col-md-2">
-          <label>Creation Date</label>
+          <label>Date de création</label>
           <input
             type="text"
             class="form-control"
             [(ngModel)]="filter.creationDate"
             name="creationDate"
-            placeholder="e.g. 2025-06-27"
+            placeholder="ex. 2025-06-27"
           />
         </div>
       </div>
 
       <div class="d-flex justify-content-end gap-2 mt-3 position-relative">
-        <button type="submit" class="btn btn-primary btn-sm">Apply Filter</button>
-        <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Reset</button>
+        <button type="submit" class="btn btn-primary btn-sm">Rechercher</button>
+        <button type="button" class="btn btn-secondary btn-sm" (click)="resetFilter()">Réinitialiser</button>
 
-        <!-- Sort dropdown -->
+        <!-- Menu déroulant tri -->
         <div class="dropdown" [class.show]="isSortDropdownOpen" style="min-width: 150px;">
           <button
             class="btn btn-info btn-sm dropdown-toggle"
@@ -164,7 +164,7 @@
             [attr.aria-expanded]="isSortDropdownOpen"
             aria-haspopup="true"
           >
-            Sort
+            Trier
           </button>
           <ul
             class="dropdown-menu dropdown-menu-end"
@@ -177,7 +177,7 @@
                 class="dropdown-item"
                 href="#"
                 (click)="setSort('amount', 'asc'); toggleSortDropdown(); $event.preventDefault()"
-                >Amount Ascending</a
+                >Montant Croissant</a
               >
             </li>
             <li>
@@ -185,7 +185,7 @@
                 class="dropdown-item"
                 href="#"
                 (click)="setSort('amount', 'desc'); toggleSortDropdown(); $event.preventDefault()"
-                >Amount Descending</a
+                >Montant Décroissant</a
               >
             </li>
             <li>
@@ -193,7 +193,7 @@
                 class="dropdown-item"
                 href="#"
                 (click)="setSort('creationDate', 'asc'); toggleSortDropdown(); $event.preventDefault()"
-                >Creation Date Ascending</a
+                >Date de création Croissante</a
               >
             </li>
             <li>
@@ -201,7 +201,7 @@
                 class="dropdown-item"
                 href="#"
                 (click)="setSort('creationDate', 'desc'); toggleSortDropdown(); $event.preventDefault()"
-                >Creation Date Descending</a
+                >Date de création Décroissante</a
               >
             </li>
           </ul>
@@ -209,29 +209,29 @@
       </div>
     </form>
 
-    <!-- LOADING & ERROR -->
-    <div *ngIf="isLoading" class="text-center p-3">Loading data...</div>
+    <!-- CHARGEMENT & ERREUR -->
+    <div *ngIf="isLoading" class="text-center p-3">Chargement des données...</div>
     <div *ngIf="error" class="text-danger p-3">{{ error }}</div>
 
-    <!-- RESPONSIVE TABLE -->
-    <div class="table-responsive">
+    <!-- TABLEAU RESPONSIVE : AFFICHER UNIQUEMENT SI showTable = TRUE -->
+    <div *ngIf="showTable" class="table-responsive">
       <table class="table table-hover">
         <thead class="text-primary">
           <tr>
-            <th>Filename</th>
-            <th>Msg Categ</th>
-            <th>Msg Type</th>
+            <th>Nom de fichier</th>
+            <th>Catégorie Msg</th>
+            <th>Type Msg</th>
             <th>BIC Em</th>
             <th>BIC De</th>
             <th>UERTR</th>
-            <th>Amount</th>
-            <th>Currency</th>
-            <th>Customer Account</th>
+            <th>Montant</th>
+            <th>Devise</th>
+            <th>Compte client</th>
             <th>Tag 71A</th>
-            <th>Status</th>
+            <th>Statut</th>
             <th>Sens</th>
-            <th>To Convert</th>
-            <th>Creation Date</th>
+            <th>À convertir</th>
+            <th>Date de création</th>
             <th class="text-center">Message</th>
           </tr>
         </thead>
@@ -255,7 +255,7 @@
               <button
                 class="btn btn-link p-0"
                 (click)="viewMsg(file.id)"
-                title="View Full Message"
+                title="Voir le message complet"
                 style="font-size: 1.4rem"
               >
                 <i class="nc-icon nc-alert-circle-i"></i>
@@ -264,12 +264,12 @@
           </tr>
 
           <tr *ngIf="filteredFiles.length === 0">
-            <td colspan="17" class="text-center text-muted">No matching records found.</td>
+            <td colspan="17" class="text-center text-muted">Aucun enregistrement correspondant trouvé.</td>
           </tr>
         </tbody>
       </table>
 
-      <!-- Pagination Controls -->
+      <!-- Contrôles de pagination -->
       <nav *ngIf="totalPages > 1" class="d-flex justify-content-center mt-3">
         <ul class="pagination">
           <li class="page-item" [class.disabled]="currentPage === 1">
@@ -278,7 +278,7 @@
               (click)="goToPage(currentPage - 1)"
               [disabled]="currentPage === 1"
             >
-              Previous
+              Précédent
             </button>
           </li>
 
@@ -296,7 +296,7 @@
               (click)="goToPage(currentPage + 1)"
               [disabled]="currentPage === totalPages"
             >
-              Next
+              Suivant
             </button>
           </li>
         </ul>

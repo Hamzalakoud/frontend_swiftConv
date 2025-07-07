@@ -2,11 +2,11 @@
   <div class="col-md-8 offset-md-2">
     <div class="card card-user">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="card-title mb-0">Edit Profile</h5>
+        <h5 class="card-title mb-0">Modifier le Profil</h5>
         <button
           class="btn btn-sm btn-outline-secondary"
           (click)="closeViewer()"
-          title="Close"
+          title="Fermer"
         >
           <i class="nc-icon nc-simple-remove" style="font-size: 1.2rem;"></i>
         </button>
@@ -14,41 +14,41 @@
 
       <div class="card-body">
         <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-          <!-- First Name -->
+          <!-- Prénom -->
           <div class="form-group mb-3">
-            <label for="firstName">First Name</label>
+            <label for="firstName">Prénom</label>
             <input
               type="text"
               id="firstName"
               class="form-control"
               formControlName="firstName"
-              placeholder="First Name"
+              placeholder="Prénom"
               [class.is-invalid]="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched"
             >
             <div class="invalid-feedback" *ngIf="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched">
-              First Name is required.
+              Le prénom est requis.
             </div>
           </div>
 
-          <!-- Last Name -->
+          <!-- Nom -->
           <div class="form-group mb-3">
-            <label for="lastName">Last Name</label>
+            <label for="lastName">Nom</label>
             <input
               type="text"
               id="lastName"
               class="form-control"
               formControlName="lastName"
-              placeholder="Last Name"
+              placeholder="Nom"
               [class.is-invalid]="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched"
             >
             <div class="invalid-feedback" *ngIf="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched">
-              Last Name is required.
+              Le nom est requis.
             </div>
           </div>
 
           <!-- Email -->
           <div class="form-group mb-3">
-            <label for="email">Email address</label>
+            <label for="email">Adresse e-mail</label>
             <input
               type="email"
               id="email"
@@ -58,31 +58,32 @@
               [class.is-invalid]="userForm.get('email')?.invalid && userForm.get('email')?.touched"
             >
             <div class="invalid-feedback" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
-              Valid email is required.
+              Une adresse e-mail valide est requise.
             </div>
           </div>
 
-          <!-- Role -->
+          <!-- Rôle -->
           <div class="form-group mb-3">
-            <label for="role">Role</label>
+            <label for="role">Rôle</label>
             <select
               id="role"
               class="form-control"
               formControlName="role"
               [class.is-invalid]="userForm.get('role')?.invalid && userForm.get('role')?.touched"
             >
-              <option value="" disabled>Select role</option>
-              <option value="admin">Admin</option>
+              <option value="" disabled>Choisir un rôle</option>
+              <option value="admin">Administrateur</option>
               <option value="editeur">Éditeur</option>
-              <option value="viewer">Viewer</option>
+              <option value="viewer">Lecteur</option>
             </select>
             <div class="invalid-feedback" *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched">
-              Role is required.
+              Le rôle est requis.
             </div>
           </div>
-          <!-- Status -->
+
+          <!-- Statut -->
           <div class="form-group mb-3">
-            <label>Status</label>
+            <label>Statut</label>
             <div class="form-check">
               <input
                 type="radio"
@@ -93,7 +94,7 @@
                 [value]="true"
                 name="statusOptions"
               />
-              <label class="form-check-label" for="statusYes">Yes</label>
+              <label class="form-check-label" for="statusYes">Actif</label>
             </div>
             <div class="form-check">
               <input
@@ -105,34 +106,32 @@
                 [value]="false"
                 name="statusOptions"
               />
-              <label class="form-check-label" for="statusNo">No</label>
+              <label class="form-check-label" for="statusNo">Inactif</label>
             </div>
           </div>
 
-
-
-          <!-- Password -->
+          <!-- Mot de passe -->
           <div class="form-group mb-3">
-            <label for="password">Password (leave blank to keep unchanged)</label>
+            <label for="password">Mot de passe (laisser vide pour ne pas modifier)</label>
             <input
               type="password"
               id="password"
               class="form-control"
               formControlName="password"
-              placeholder="New Password"
+              placeholder="Nouveau mot de passe"
               minlength="6"
               [required]="userForm.get('password')?.value !== ''"
               [class.is-invalid]="userForm.get('password')?.invalid && userForm.get('password')?.touched"
             />
             <div class="invalid-feedback" *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched">
-              <span *ngIf="userForm.get('password')?.errors?.['required']">Password is required.</span>
-              <span *ngIf="userForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</span>
+              <span *ngIf="userForm.get('password')?.errors?.['required']">Le mot de passe est requis.</span>
+              <span *ngIf="userForm.get('password')?.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères.</span>
             </div>
           </div>
 
-          <!-- Creation Date (readonly) -->
+          <!-- Date de création -->
           <div class="form-group mb-3">
-            <label>Created On</label>
+            <label>Créé le</label>
             <input
               type="text"
               class="form-control"
@@ -141,9 +140,9 @@
             >
           </div>
 
-          <!-- Last Update Date (readonly) -->
+          <!-- Dernière mise à jour -->
           <div class="form-group mb-3">
-            <label>Last Updated</label>
+            <label>Dernière mise à jour</label>
             <input
               type="text"
               class="form-control"
@@ -153,7 +152,7 @@
           </div>
 
           <button type="submit" class="btn btn-primary btn-round px-4 py-2" [disabled]="userForm.invalid">
-            Apply
+            Appliquer
           </button>
         </form>
       </div>
@@ -161,6 +160,6 @@
   </div>
 </div>
 
-<!-- Loading and Error Messages -->
-<div *ngIf="isLoading" class="text-center p-3">Loading user...</div>
+<!-- Chargement & erreurs -->
+<div *ngIf="isLoading" class="text-center p-3">Chargement de l'utilisateur...</div>
 <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>

@@ -14,7 +14,7 @@ export interface ScConversion {
   currency: string;
   customerAccount: string;
   tag71A: string;
-  msgOrigMT: string | null;   // Correct types for msgOrigMT and msgOrigMX
+  msgOrigMT: string | null;
   msgOrigMX: string | null;
   status: string;
   sens: string;
@@ -26,9 +26,8 @@ export interface ScConversion {
 @Injectable({
   providedIn: 'root'
 })
-export class ScConversionService {
-
-  private apiUrl = '/api/sc-conversion';  // base URL for your backend endpoint
+export class ScConversionService  {
+  private apiUrl = '/api/sc-conversion';
 
   constructor(private http: HttpClient) {}
 
@@ -43,6 +42,19 @@ export class ScConversionService {
     });
   }
 
+  getFilteredFiles(filter: any): Observable<ScConversion[]> {
+    const params = new URLSearchParams();
+    for (const key in filter) {
+      const value = filter[key];
+      if (value !== null && value !== undefined && value.toString().trim() !== '') {
+        params.set(key, value);
+      }
+    }
+    return this.http.get<ScConversion[]>(`${this.apiUrl}/filtered?${params.toString()}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
   getFileById(id: number): Observable<ScConversion> {
     return this.http.get<ScConversion>(`${this.apiUrl}/${id}`, {
       headers: this.getAuthHeaders()
@@ -53,5 +65,10 @@ export class ScConversionService {
     return this.http.get<number>(`${this.apiUrl}/count`, {
       headers: this.getAuthHeaders()
     });
+  }
+  getDashboardStats(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/stats`, {
+      headers: this.getAuthHeaders()
+  });
   }
 }

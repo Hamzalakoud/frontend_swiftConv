@@ -26,9 +26,11 @@
       </div>
     </div>
 
-    <button class="btn btn-link mt-3" (click)="openMsgOrig()" *ngIf="mtMsg || mxMsg">
-      <i class="nc-icon nc-alert-circle-i" style="font-size: 1.2rem; margin-right: 8px;"></i>
-      Open in new window
+    <button class="btn btn-link mt-3 d-flex align-items-center" (click)="openMsgOrig()" *ngIf="mtMsg || mxMsg">
+      <i class="nc-icon nc-alert-circle-i me-2" style="font-size: 1.2rem;"></i>
+      <span>Open in new window</span>
     </button>
+
+
   </div>
 </div>

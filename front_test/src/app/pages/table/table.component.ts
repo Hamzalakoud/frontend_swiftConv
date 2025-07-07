@@ -12,7 +12,7 @@ export class TableComponent implements OnInit {
 
   public files: ScConversion[] = [];
   public filteredFiles: ScConversion[] = [];
-  public isLoading = true;
+  public isLoading = false;
   public error: string | null = null;
 
   public filter = {
@@ -29,8 +29,7 @@ export class TableComponent implements OnInit {
     status: '',
     sens: '',
     toConvert: '',
-    creationDate: '',
-    updateDate: ''
+    creationDate: ''
   };
 
   public currentPage = 1;
@@ -39,17 +38,16 @@ export class TableComponent implements OnInit {
   public sortColumn: string | null = null;
   public sortDirection: 'asc' | 'desc' = 'asc';
 
-  // Controls dropdown visibility
   public isSortDropdownOpen = false;
+
+  public showTable = false; // <--- Control table visibility
 
   constructor(
     @Inject(ScConversionService) private scConversionService: ScConversionService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.loadFiles();
-  }
+  ngOnInit(): void {}
 
   get totalPages(): number {
     return Math.ceil(this.filteredFiles.length / this.pageSize);
@@ -74,58 +72,34 @@ export class TableComponent implements OnInit {
     }
   }
 
-  loadFiles(): void {
-    this.scConversionService.getFiles().subscribe({
+  applyFilter(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    this.scConversionService.getFilteredFiles(this.filter).subscribe({
       next: (data) => {
         this.files = data;
         this.filteredFiles = [...data];
         this.applySorting();
+        this.currentPage = 1;
         this.isLoading = false;
+        this.scrollToTop();
+        this.showTable = true; // Show table only after applying filter
       },
       error: (err) => {
         this.error = 'Failed to load data from server';
         this.isLoading = false;
         console.error(err);
+        this.showTable = false; // Hide table on error
       }
     });
   }
 
-  applyFilter(): void {
-    const cleanFilter = Object.entries(this.filter).reduce((acc, [key, value]) => {
-      acc[key] = value?.toString().trim().toLowerCase() || '';
-      return acc;
-    }, {} as Record<string, string>);
-
-    this.filteredFiles = this.files.filter(file => {
-      return Object.entries(cleanFilter).every(([key, filterValue]) => {
-        if (!filterValue) return true;
-
-        let fieldValue = file[key as keyof ScConversion];
-        if (fieldValue === null || fieldValue === undefined) return false;
-
-        if (typeof fieldValue === 'string' && /\d{4}-\d{2}-\d{2}/.test(fieldValue)) {
-          fieldValue = new Date(fieldValue).toISOString().toLowerCase();
-        }
-
-        if (typeof fieldValue === 'number') {
-          fieldValue = fieldValue.toString();
-        }
-
-        return String(fieldValue).toLowerCase().includes(filterValue);
-      });
-    });
-
-    this.applySorting();
-    this.currentPage = 1;
-    this.scrollToTop();
-  }
-
   resetFilter(): void {
     Object.keys(this.filter).forEach(key => this.filter[key as keyof typeof this.filter] = '');
-    this.filteredFiles = [...this.files];
-    this.applySorting();
-    this.currentPage = 1;
-    this.scrollToTop();
+    this.filteredFiles = [];
+    this.files = [];
+    this.showTable = false; // Hide table on reset
   }
 
   toggleSortDropdown(): void {
@@ -134,7 +108,6 @@ export class TableComponent implements OnInit {
 
   setSort(column: string, direction: 'asc' | 'desc'): void {
     if (this.sortColumn === column && this.sortDirection === direction) {
-      // If already sorted this way, toggle direction
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
       this.sortColumn = column;

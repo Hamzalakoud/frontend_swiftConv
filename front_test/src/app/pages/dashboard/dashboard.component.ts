@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js';
-import { ScConversionService, ScConversion } from '../../services/scconversion.service';
+import { ScConversionService } from '../../services/scconversion.service';
 
 @Component({
   selector: 'dashboard-cmp',
   moduleId: module.id,
   templateUrl: 'dashboard.component.html'
 })
+
 export class DashboardComponent implements OnInit {
   public canvas: any;
   public ctx: any;
   public chartColor: any;
   public MessageStatus: any;
-  public chartHours: any;
   public speedChart: any;
 
   totalConvertedDay: number = 0;
@@ -36,71 +36,29 @@ export class DashboardComponent implements OnInit {
   }
 
   loadCounts(): void {
-    this.scConversionService.getFiles().subscribe({
-      next: (files: ScConversion[]) => {
-        const today = new Date();
-        const startOfWeek = new Date(today);
-        startOfWeek.setDate(today.getDate() - today.getDay());
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    this.scConversionService.getDashboardStats().subscribe({
+      next: (data) => {
+        this.totalConvertedDay = data.totalConvertedDay;
+        this.totalNSConvertDay = data.totalNSConvertDay;
+        this.totalFailedDay = data.totalFailedDay;
 
-        const isSameDay = (date: string | Date): boolean => {
-          const d = new Date(date);
-          return d.toDateString() === today.toDateString();
-        };
+        this.totalConvertedWeek = data.totalConvertedWeek;
+        this.totalNSConvertWeek = data.totalNSConvertWeek;
+        this.totalFailedWeek = data.totalFailedWeek;
 
-        const isSameWeek = (date: string | Date): boolean => {
-          const d = new Date(date);
-          return d >= startOfWeek && d <= today;
-        };
+        this.weekLabels = data.weeklyData.map((d: any) => {
+          const dt = new Date(d.date);
+          return dt.toLocaleDateString('fr-FR', { weekday: 'short' }); // French weekday short name
+        });
 
-        const isSameMonth = (date: string | Date): boolean => {
-          const d = new Date(date);
-          return d >= startOfMonth && d <= today;
-        };
+        this.weeklyConverted = data.weeklyData.map((d: any) => d.converted);
+        this.weeklyNS = data.weeklyData.map((d: any) => d.ns);
+        this.weeklyFailed = data.weeklyData.map((d: any) => d.failed);
 
-        // Daily counts
-        this.totalConvertedDay = files.filter(f => f.status === 'CONVERTED' && isSameDay(f.creationDate)).length;
-        this.totalNSConvertDay = files.filter(f => f.status === 'NC' && isSameDay(f.creationDate)).length;
-        this.totalFailedDay = files.filter(f => f.status === 'FAILED' && isSameDay(f.creationDate)).length;
-
-        // Weekly counts
-        this.totalConvertedWeek = files.filter(f => f.status === 'CONVERTED' && isSameWeek(f.creationDate)).length;
-        this.totalNSConvertWeek = files.filter(f => f.status === 'NC' && isSameWeek(f.creationDate)).length;
-        this.totalFailedWeek = files.filter(f => f.status === 'FAILED' && isSameWeek(f.creationDate)).length;
-
-        // Weekly bar chart data for the last 7 days
-        const last7Days: string[] = [];
-        const converted: number[] = [];
-        const ns: number[] = [];
-        const failed: number[] = [];
-
-        for (let i = 6; i >= 0; i--) {
-          const date = new Date();
-          date.setDate(today.getDate() - i);
-          const label = date.toLocaleDateString('en-US', { weekday: 'short' });
-          last7Days.push(label);
-
-          converted.push(
-            files.filter(f => f.status === 'CONVERTED' && new Date(f.creationDate).toDateString() === date.toDateString()).length
-          );
-          ns.push(
-            files.filter(f => f.status === 'NC' && new Date(f.creationDate).toDateString() === date.toDateString()).length
-          );
-          failed.push(
-            files.filter(f => f.status === 'FAILED' && new Date(f.creationDate).toDateString() === date.toDateString()).length
-          );
-        }
-
-        this.weekLabels = last7Days;
-        this.weeklyConverted = converted;
-        this.weeklyNS = ns;
-        this.weeklyFailed = failed;
-
-        // Initialize charts after data loaded
         this.initCharts();
       },
       error: (err) => {
-        console.error('Error loading message counts:', err);
+        console.error('Erreur lors du chargement des statistiques du tableau de bord :', err);
         this.totalConvertedDay = this.totalNSConvertDay = this.totalFailedDay = 0;
         this.totalConvertedWeek = this.totalNSConvertWeek = this.totalFailedWeek = 0;
         this.weekLabels = [];
@@ -121,9 +79,9 @@ export class DashboardComponent implements OnInit {
     this.MessageStatus = new Chart(this.ctx, {
       type: 'pie',
       data: {
-        labels: ['Converted', 'NC', 'Failed'],
+        labels: ['Convertis', 'Non convertis', 'Rejetés'],
         datasets: [{
-          label: "Message Status",
+          label: "Statut des messages",
           backgroundColor: ['#4caf50', '#ffc107', '#f44336'],
           borderWidth: 0,
           data: [this.totalConvertedWeek, this.totalNSConvertWeek, this.totalFailedWeek]
@@ -131,7 +89,15 @@ export class DashboardComponent implements OnInit {
       },
       options: {
         legend: { display: false },
-        tooltips: { enabled: true },
+        tooltips: {
+          enabled: true,
+          callbacks: {
+            label: (tooltipItem) => {
+              const labels = ['Convertis', 'Non convertis', 'Rejetés'];
+              return labels[tooltipItem.index] + ': ' + tooltipItem.yLabel;
+            }
+          }
+        },
       }
     });
 
@@ -146,21 +112,21 @@ export class DashboardComponent implements OnInit {
         labels: this.weekLabels,
         datasets: [
           {
-            label: 'Converted',
+            label: 'Convertis',
             backgroundColor: '#2ecc71',
             borderColor: '#2ecc71',
             borderWidth: 1,
             data: this.weeklyConverted
           },
           {
-            label: 'NC',
+            label: 'Non convertis',
             backgroundColor: '#f39c12',
             borderColor: '#f39c12',
             borderWidth: 1,
             data: this.weeklyNS
           },
           {
-            label: 'Failed',
+            label: 'Rejetés',
             backgroundColor: '#e74c3c',
             borderColor: '#e74c3c',
             borderWidth: 1,
@@ -172,7 +138,12 @@ export class DashboardComponent implements OnInit {
         responsive: true,
         plugins: {
           legend: { display: true, position: 'top' },
-          tooltip: { enabled: true }
+          tooltip: {
+            enabled: true,
+            callbacks: {
+              label: (context) => context.dataset.label + ': ' + context.parsed.y
+            }
+          }
         },
         scales: {
           xAxes: [{
