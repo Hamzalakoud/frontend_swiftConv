@@ -17,7 +17,7 @@ import { MappingMtToMxComponent } from '../../pages/mapping-mt-to-mx/mapping-mt-
 import { MappingMxToMtComponent } from 'app/pages/mapping-mx-to-mt/mapping-mx-to-mt.component';
 import { ScParamGlobalComponent } from 'app/pages/sc-param-global/sc-param-global.component';
 import { ScMappingDirectoryComponent } from 'app/pages/sc-mapping-directory/sc-mapping-directory.component';
-import { ConvertionrComponent } from 'app/pages/convertion/convertion.component';
+import { ConvertionComponent } from 'app/pages/convertion/convertion.component';
 
 export const AdminLayoutRoutes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -35,7 +35,7 @@ export const AdminLayoutRoutes: Routes = [
   { path: 'Param_Mapping/mx-to-mt', component: MappingMxToMtComponent, canActivate: [authGuard] },
   { path: 'config/global', component: ScParamGlobalComponent, canActivate: [authGuard] },
   { path: 'config/param_repertoires', component: ScMappingDirectoryComponent, canActivate: [authGuard] },
-  { path: 'conversion', component: ConvertionrComponent, canActivate: [authGuard] },
+  { path: 'conversion', component: ConvertionComponent, canActivate: [authGuard] },
 
       //{ path: '/config/param_repertoires', title: 'Param Global', icon: 'nc-world-2', class: '' },/config/param_repertoires
 

@@ -37,3 +37,13 @@
   height: 300px;
   overflow: auto;
 }
+
+.full-height {
+  height: 85vh;  /* Ensures the height of the row spans the entire viewport */
+  display: flex;  /* Makes it a flex container to stretch items vertically */
+}
+
+
+.col-md-6 {
+  padding: 20px;
+}

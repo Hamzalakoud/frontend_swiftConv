@@ -1,6 +1,7 @@
-<div class="row">
+
+   <div class="row full-height">
   <!-- Colonne Message MT -->
-  <div class="col-md-6">
+  <div class="col-md-6" style="padding-right: 20px; border-right: 3px solid #333;">
     <h6 class="mb-3">Message MT</h6>
 
     <div
@@ -11,10 +12,10 @@
       (drop)="onDrop($event, 'mt')"
       tabindex="0"
       role="button"
-      aria-label="Glissez-déposez un fichier MT ici ou cliquez pour sélectionner"
+      [attr.aria-label]="mtFileName || 'Glissez-déposez un fichier MT ici ou cliquez pour sélectionner'"
       (click)="fileInputMT.click()"
     >
-      <p>Glissez-déposez un fichier MT ici, ou cliquez pour choisir un fichier</p>
+      <p>{{ mtFileName || 'Glissez-déposez un fichier MT ici, ou cliquez pour choisir un fichier' }}</p>
       <input type="file" #fileInputMT hidden (change)="onFileSelected($event, 'mt')" accept=".txt,.mt" />
     </div>
 
@@ -43,10 +44,10 @@
       (drop)="onDrop($event, 'mx')"
       tabindex="0"
       role="button"
-      aria-label="Glissez-déposez un fichier MX ici ou cliquez pour sélectionner"
+      [attr.aria-label]="mxFileName || 'Glissez-déposez un fichier MT ici ou cliquez pour sélectionner'"
       (click)="fileInputMX.click()"
     >
-      <p class="text-center">Glissez-déposez un fichier MX ici, ou cliquez pour choisir un fichier</p>
+      <p>{{ mxFileName || 'Glissez-déposez un fichier MX ici, ou cliquez pour choisir un fichier' }}</p>
       <input type="file" #fileInputMX hidden (change)="onFileSelected($event, 'mx')" accept=".txt,.mx" />
     </div>
 
