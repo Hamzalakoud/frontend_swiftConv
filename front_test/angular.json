@@ -80,8 +80,7 @@
             },
             "development": {
               "browserTarget": "pd-free-angularcli:build:development"
-            },
-            "defaultConfiguration": "development"
+            }
           }
         },
         "extract-i18n": {

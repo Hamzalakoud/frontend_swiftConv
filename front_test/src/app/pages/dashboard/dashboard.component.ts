@@ -158,7 +158,8 @@ export class DashboardComponent implements OnInit {
               min: 0,
               max: 100,
               fontColor: "#9f9f9f",
-              maxTicksLimit: 5
+              maxTicksLimit: 5,
+              stepSize: 25  // This will create ticks at 0, 25, 50, 75, 100
             },
             gridLines: {
               color: 'rgba(255,255,255,0.05)'

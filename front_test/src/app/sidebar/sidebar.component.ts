@@ -13,16 +13,8 @@ export interface RouteInfo {
 export const ROUTES: RouteInfo[] = [
   { path: '/dashboard', title: 'Dashboard', icon: 'nc-bank', class: '' },
   { path: '/table', title: 'Consultation SWIFT', icon: 'nc-email-85', class: '' },
-  {
-    title: 'Conversion',
-    icon: 'nc-refresh-69',
-    class: '',
-    open: false,
-    children: [
-      { path: '/conversion/mx-to-mt', title: 'MX → MT ', icon: 'nc-cloud-upload-94', class: '' },
-      { path: '/conversion/mt-to-mx', title: 'MT → MX ', icon: 'nc-cloud-upload-94', class: '' }
-    ]
-  },
+  { path: '/conversion', title: 'Conversion', icon: 'nc-refresh-69', class: '' },
+
   {
     title: 'Configuration',
     icon: 'nc-settings-gear-65',

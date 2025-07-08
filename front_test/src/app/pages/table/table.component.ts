@@ -76,10 +76,30 @@ export class TableComponent implements OnInit {
     this.isLoading = true;
     this.error = null;
 
-    this.scConversionService.getFilteredFiles(this.filter).subscribe({
+    // Trim all string fields in the filter
+    const trimmedFilter: typeof this.filter = {} as any;
+    Object.keys(this.filter).forEach(key => {
+      const val = this.filter[key as keyof typeof this.filter];
+      trimmedFilter[key as keyof typeof this.filter] = typeof val === 'string' ? val.trim() : val;
+    });
+
+    this.scConversionService.getFilteredFiles(trimmedFilter).subscribe({
       next: (data) => {
-        this.files = data;
-        this.filteredFiles = [...data];
+        // If filename filter is set, do flexible filtering ignoring extensions
+        if (trimmedFilter.filename) {
+          const baseName = trimmedFilter.filename.split('.')[0].toLowerCase();
+
+          this.filteredFiles = data.filter(file => {
+            if (!file.filename) return false;
+            const fileBaseName = file.filename.split('.')[0].toLowerCase();
+            return fileBaseName.includes(baseName);
+          });
+        } else {
+          this.filteredFiles = [...data];  // No filename filter, use all data
+        }
+
+        this.files = [...this.filteredFiles];
+
         this.applySorting();
         this.currentPage = 1;
         this.isLoading = false;
@@ -94,6 +114,7 @@ export class TableComponent implements OnInit {
       }
     });
   }
+
 
   resetFilter(): void {
     Object.keys(this.filter).forEach(key => this.filter[key as keyof typeof this.filter] = '');

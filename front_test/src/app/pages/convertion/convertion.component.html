@@ -1,0 +1,65 @@
+<div class="row">
+  <!-- Colonne Message MT -->
+  <div class="col-md-6">
+    <h6 class="mb-3">Message MT</h6>
+
+    <div
+      class="drop-zone"
+      [class.drag-over]="isDragOver"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event, 'mt')"
+      tabindex="0"
+      role="button"
+      aria-label="Glissez-déposez un fichier MT ici ou cliquez pour sélectionner"
+      (click)="fileInputMT.click()"
+    >
+      <p>Glissez-déposez un fichier MT ici, ou cliquez pour choisir un fichier</p>
+      <input type="file" #fileInputMT hidden (change)="onFileSelected($event, 'mt')" accept=".txt,.mt" />
+    </div>
+
+    <button
+      class="btn btn-outline-primary btn-sm mt-3"
+      [disabled]="!droppedFileMT"
+      (click)="uploadFile('mt')"
+      title="Envoyer le fichier MT vers le serveur"
+    >
+      Envoyer le fichier MT
+    </button>
+
+    <pre *ngIf="mtMsg" class="msg-box">{{ mtMsg }}</pre>
+    <div *ngIf="!mtMsg" class="text-muted">Aucun contenu de message MT disponible.</div>
+  </div>
+
+  <!-- Colonne Message MX -->
+  <div class="col-md-6">
+    <h6 class="mb-3">Message MX</h6>
+
+    <div
+      class="drop-zone"
+      [class.drag-over]="isDragOver"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event, 'mx')"
+      tabindex="0"
+      role="button"
+      aria-label="Glissez-déposez un fichier MX ici ou cliquez pour sélectionner"
+      (click)="fileInputMX.click()"
+    >
+      <p class="text-center">Glissez-déposez un fichier MX ici, ou cliquez pour choisir un fichier</p>
+      <input type="file" #fileInputMX hidden (change)="onFileSelected($event, 'mx')" accept=".txt,.mx" />
+    </div>
+
+    <button
+      class="btn btn-outline-primary btn-sm mt-3"
+      [disabled]="!droppedFileMX"
+      (click)="uploadFile('mx')"
+      title="Envoyer le fichier MX vers le serveur"
+    >
+      Envoyer le fichier MX
+    </button>
+
+    <pre *ngIf="mxMsg" class="msg-box">{{ mxMsg }}</pre>
+    <div *ngIf="!mxMsg" class="text-muted text-center">Aucun contenu de message MX disponible.</div>
+  </div>
+</div>
