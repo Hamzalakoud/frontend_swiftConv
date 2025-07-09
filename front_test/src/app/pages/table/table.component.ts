@@ -42,6 +42,12 @@ export class TableComponent implements OnInit {
 
   public showTable = false; // <--- Control table visibility
 
+  statusMap: { [key: string]: string } = {
+    CONVERTED: 'Converti',
+    NS: 'Non converti',
+    FAILED: 'Échoué'
+  };
+
   constructor(
     @Inject(ScConversionService) private scConversionService: ScConversionService,
     private router: Router

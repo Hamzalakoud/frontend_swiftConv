@@ -35,6 +35,12 @@ throw new Error('Method not implemented.');
 userForm: any;
 errorMessage: any;
 
+  statusMap: { [key: string]: string } = {
+    admin: 'Administrateur',
+    editeur: 'Éditeur',
+    viewer: 'Consultant'
+  };
+
   constructor(
     private userService: UserService,
     private router: Router

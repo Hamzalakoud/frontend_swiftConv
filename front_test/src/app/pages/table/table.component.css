@@ -11,3 +11,28 @@ input:focus::placeholder {
   overflow-y: hidden; /* hide vertical scrollbar */
   white-space: nowrap; /* prevent wrapping inside the table */
 }
+
+/* Sticky last column */
+th.sticky-right,
+td.sticky-right {
+  position: sticky;
+  right: 0;
+  background-color: white; /* Or your table background */
+  z-index: 10;
+  box-shadow: -2px 0 5px -2px rgba(0,0,0,0.2); /* subtle shadow for separation */
+}
+
+.no-uppercase thead th {
+  text-transform: none !important;
+}
+
+.sticky-right::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background-color: #d1d1d1; /* Light gray vertical line */
+  z-index: 3;
+}

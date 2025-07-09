@@ -31,7 +31,7 @@
         <div class="row">
           <div class="col-5 col-md-4">
             <div class="icon-big text-center icon-warning">
-              <i class="nc-icon nc-simple-remove text-danger"></i>
+              <i class="nc-icon nc-refresh-69 text-warning"></i>
             </div>
           </div>
           <div class="col-7 col-md-8">
@@ -57,7 +57,7 @@
         <div class="row">
           <div class="col-5 col-md-4">
             <div class="icon-big text-center icon-warning">
-              <i class="nc-icon nc-refresh-69 text-warning"></i>
+              <i class="nc-icon nc-simple-remove text-danger"></i>
             </div>
           </div>
           <div class="col-7 col-md-8">
@@ -86,7 +86,7 @@
         <h5 class="card-title">Etat hebdomadaire des messages</h5>
       </div>
       <div class="card-body">
-        <canvas id="speedChart" width="400" height="140"></canvas>
+        <canvas id="speedChart" width="400" height="145"></canvas>
       </div>
       <div class="card-footer">
         <hr/>
@@ -102,16 +102,13 @@
     <div class="card ">
       <div class="card-header ">
         <h5 class="card-title">Statut hebdomadaire des messages</h5>
-        <p class="card-category">Convertis vs Non convertis vs Rejetés</p>
       </div>
       <div class="card-body ">
         <canvas id="MessageStatus"></canvas>
       </div>
       <div class="card-footer ">
-        <div class="legend">
-          <i class="fa fa-circle" style="color:#2ecc71"></i> Convertis
-          <i class="fa fa-circle" style="color:#f39c12"></i> Non convertis
-          <i class="fa fa-circle" style="color:#e74c3c"></i> Rejetés
+        <div class="legend" id="customPieLegend">
+          <!-- Custom legend with percentages will be inserted here -->
         </div>
         <hr>
         <div class="stats">

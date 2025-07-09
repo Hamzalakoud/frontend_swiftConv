@@ -1,5 +1,4 @@
 <div class="card">
-
   <div class="card-header">
     <h5 class="card-title">Consultation et Suivie des Messages SWIFT</h5>
   </div>
@@ -18,18 +17,9 @@
             placeholder="ex. fichier.xml"
           />
         </div>
+
         <div class="col-md-2">
-          <label>Catégorie de message</label>
-          <input
-            type="text"
-            class="form-control"
-            [(ngModel)]="filter.msgCateg"
-            name="msgCateg"
-            placeholder="ex. FIN"
-          />
-        </div>
-        <div class="col-md-2">
-          <label>Type de message</label>
+          <label>Type D'Origine</label>
           <input
             type="text"
             class="form-control"
@@ -38,7 +28,7 @@
             placeholder="ex. MT103"
           />
         </div>
-        <div class="col-md-2 ">
+        <div class="col-md-2">
           <label>Banque Émettrice</label>
           <input
             type="text"
@@ -58,7 +48,7 @@
             placeholder="ex. BICDEXXX"
           />
         </div>
-        <div class="col-md-3 ">
+        <div class="col-md-3">
           <label>UETR</label>
           <input
             type="text"
@@ -78,7 +68,7 @@
             placeholder="ex. 1000"
           />
         </div>
-        <div class="col-md-2 ">
+        <div class="col-md-2">
           <label>Devise</label>
           <input
             type="text"
@@ -98,7 +88,7 @@
             placeholder="ex. 1234567890"
           />
         </div>
-        <div class="col-md-2 ">
+        <div class="col-md-2">
           <label>Tag 71A</label>
           <input
             type="text"
@@ -108,36 +98,50 @@
             placeholder="ex. OUR"
           />
         </div>
+
+        <!-- Status Dropdown -->
         <div class="col-md-2">
           <label>Statut</label>
-          <input
-            type="text"
+          <select
             class="form-control"
             [(ngModel)]="filter.status"
             name="status"
-            placeholder="ex. EN ATTENTE"
-          />
+          >
+            <option value="" disabled>Choisir un statut</option>
+            <option value="FAILED">Échoué</option>
+            <option value="CONVERTED">Converti</option>
+            <option value="NC">Non Converti</option>
+          </select>
         </div>
+
+        <!-- Sens Dropdown -->
         <div class="col-md-2">
           <label>Sens</label>
-          <input
-            type="text"
+          <select
             class="form-control"
             [(ngModel)]="filter.sens"
             name="sens"
-            placeholder="ex. ENTRANT/SORTANT"
-          />
+          >
+            <option value="" disabled>Choisir un sens</option>
+            <option value="entrant">Entrant</option>
+            <option value="sortant">Sortant</option>
+          </select>
         </div>
-        <div class="col-md-2 ">
+
+        <!-- À Convertir Dropdown -->
+        <div class="col-md-2">
           <label>À convertir</label>
-          <input
-            type="text"
+          <select
             class="form-control"
             [(ngModel)]="filter.toConvert"
             name="toConvert"
-            placeholder="ex. OUI/NON"
-          />
+          >
+            <option value="" disabled>Choisir une option</option>
+            <option value="oui">Oui</option>
+            <option value="non">Non</option>
+          </select>
         </div>
+
         <div class="col-md-2">
           <label>Date de création</label>
           <input
@@ -215,30 +219,28 @@
 
     <!-- TABLEAU RESPONSIVE : AFFICHER UNIQUEMENT SI showTable = TRUE -->
     <div *ngIf="showTable" class="table-responsive">
-      <table class="table table-hover">
+      <table class="table table-hover no-uppercase">
         <thead class="text-primary">
           <tr>
             <th>Nom de fichier</th>
-            <th>Catégorie Msg</th>
-            <th>Type Msg</th>
-            <th>BIC Em</th>
-            <th>BIC De</th>
-            <th>UERTR</th>
+            <th>Type D'Origine</th>
+            <th>Banque Émettrice</th>
+            <th>Banque Réceptrice</th>
+            <th>UETR</th>
             <th>Montant</th>
             <th>Devise</th>
             <th>Compte client</th>
-            <th>Tag 71A</th>
-            <th>Statut</th>
+            <th>Charge</th>
+            <th>État</th>
             <th>Sens</th>
             <th>À convertir</th>
             <th>Date de création</th>
-            <th class="text-center">Message</th>
+            <th class="text-center sticky-right">Détail</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let file of paginatedFiles">
             <td>{{ file.filename }}</td>
-            <td>{{ file.msgCateg }}</td>
             <td>{{ file.msgType }}</td>
             <td>{{ file.bicEm }}</td>
             <td>{{ file.bicDe }}</td>
@@ -247,11 +249,11 @@
             <td>{{ file.currency }}</td>
             <td>{{ file.customerAccount }}</td>
             <td>{{ file.tag71A }}</td>
-            <td>{{ file.status }}</td>
+            <td>{{ statusMap[file.status] || file.status }}</td>
             <td>{{ file.sens }}</td>
             <td>{{ file.toConvert }}</td>
             <td>{{ file.creationDate | date: 'short' }}</td>
-            <td class="text-center">
+            <td class="text-center sticky-right">
               <button
                 class="btn btn-link p-0"
                 (click)="viewMsg(file.id)"

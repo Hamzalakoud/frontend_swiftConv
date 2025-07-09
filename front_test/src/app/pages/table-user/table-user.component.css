@@ -11,3 +11,6 @@ input:focus::placeholder {
   overflow-y: hidden; /* hide vertical scrollbar */
   white-space: nowrap; /* prevent wrapping inside the table */
 }
+.no-uppercase thead th {
+  text-transform: none !important;
+}

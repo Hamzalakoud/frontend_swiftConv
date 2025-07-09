@@ -7,7 +7,6 @@ import { ScConversionService } from '../../services/scconversion.service';
   moduleId: module.id,
   templateUrl: 'dashboard.component.html'
 })
-
 export class DashboardComponent implements OnInit {
   public canvas: any;
   public ctx: any;
@@ -23,7 +22,6 @@ export class DashboardComponent implements OnInit {
   totalNSConvertWeek: number = 0;
   totalFailedWeek: number = 0;
 
-  // Weekly bar chart data
   weeklyConverted: number[] = [];
   weeklyNS: number[] = [];
   weeklyFailed: number[] = [];
@@ -46,14 +44,31 @@ export class DashboardComponent implements OnInit {
         this.totalNSConvertWeek = data.totalNSConvertWeek;
         this.totalFailedWeek = data.totalFailedWeek;
 
-        this.weekLabels = data.weeklyData.map((d: any) => {
-          const dt = new Date(d.date);
+        // Step 1: Generate 7 days from today going backwards
+        const today = new Date();
+        const fullWeekDates: string[] = [];
+        for (let i = 0; i < 7; i++) {
+          const dt = new Date(today);
+          dt.setDate(today.getDate() - i);
+          fullWeekDates.push(dt.toISOString().slice(0, 10));
+        }
+        fullWeekDates.reverse(); // Show oldest to newest
+
+        // Step 2: Create a map for quick lookup of data by date
+        const dataMap = new Map<string, any>();
+        data.weeklyData.forEach((d: any) => {
+          dataMap.set(d.date, d);
+        });
+
+        // Step 3: Map full week dates to data, fill missing days with zeros
+        this.weekLabels = fullWeekDates.map(dateStr => {
+          const dt = new Date(dateStr);
           return dt.toLocaleDateString('fr-FR', { weekday: 'short' }); // French weekday short name
         });
 
-        this.weeklyConverted = data.weeklyData.map((d: any) => d.converted);
-        this.weeklyNS = data.weeklyData.map((d: any) => d.ns);
-        this.weeklyFailed = data.weeklyData.map((d: any) => d.failed);
+        this.weeklyConverted = fullWeekDates.map(dateStr => dataMap.get(dateStr)?.converted || 0);
+        this.weeklyNS = fullWeekDates.map(dateStr => dataMap.get(dateStr)?.ns || 0);
+        this.weeklyFailed = fullWeekDates.map(dateStr => dataMap.get(dateStr)?.failed || 0);
 
         this.initCharts();
       },
@@ -76,30 +91,57 @@ export class DashboardComponent implements OnInit {
     this.ctx = this.canvas.getContext("2d");
     if (this.MessageStatus) this.MessageStatus.destroy();
 
+    const pieLabels = ["Convertis", "Non convertis", "Rejetés"];
+    const pieColors = ["#2ecc71", "#f39c12", "#e74c3c"];
+    const pieData = [
+      this.totalConvertedWeek,
+      this.totalNSConvertWeek,
+      this.totalFailedWeek,
+    ];
+    const total = pieData.reduce((a, b) => a + b, 0);
+
     this.MessageStatus = new Chart(this.ctx, {
-      type: 'pie',
+      type: "pie",
       data: {
-        labels: ['Convertis', 'Non convertis', 'Rejetés'],
+        labels: pieLabels,
         datasets: [{
-          label: "Statut des messages",
-          backgroundColor: ['#4caf50', '#ffc107', '#f44336'],
-          borderWidth: 0,
-          data: [this.totalConvertedWeek, this.totalNSConvertWeek, this.totalFailedWeek]
+          label: "Statut",
+          data: pieData,
+          backgroundColor: pieColors,
+          borderWidth: 1,
         }]
       },
       options: {
-        legend: { display: false },
-        tooltips: {
-          enabled: true,
-          callbacks: {
-            label: (tooltipItem) => {
-              const labels = ['Convertis', 'Non convertis', 'Rejetés'];
-              return labels[tooltipItem.index] + ': ' + tooltipItem.yLabel;
-            }
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const value = context.raw;
+                const percent = total > 0 ? ((value / total) * 100).toFixed(1) : "0";
+                return `${context.label}: ${value} (${percent}%)`;
+              },
+            },
+          },
+          legend: {
+            display: false, // Hide default legend; we add custom below
           }
-        },
+        }
       }
     });
+
+    // Insert custom legend with percentages dynamically
+    const legendContainer = document.getElementById('customPieLegend');
+    if (legendContainer) {
+      legendContainer.innerHTML = pieLabels.map((label, i) => {
+        const value = pieData[i];
+        const percent = total > 0 ? ((value / total) * 100).toFixed(1) : "0";
+        return `
+          <i class="fa fa-circle" style="color:${pieColors[i]}; margin-right: 5px;"></i>
+          <strong>${label}:</strong> ${percent}%
+        `;
+      }).join('<br>');
+    }
 
     // Bar Chart (Weekly grouped data)
     this.canvas = document.getElementById("speedChart") as HTMLCanvasElement;
@@ -159,7 +201,7 @@ export class DashboardComponent implements OnInit {
               max: 100,
               fontColor: "#9f9f9f",
               maxTicksLimit: 5,
-              stepSize: 25  // This will create ticks at 0, 25, 50, 75, 100
+              stepSize: 25
             },
             gridLines: {
               color: 'rgba(255,255,255,0.05)'
