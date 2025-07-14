@@ -35,10 +35,15 @@ throw new Error('Method not implemented.');
 userForm: any;
 errorMessage: any;
 
-  statusMap: { [key: string]: string } = {
+  RoleMap: { [key: string]: string } = {
     admin: 'Administrateur',
     editeur: 'Éditeur',
     viewer: 'Consultant'
+  };
+
+    statusMap: { [key: string]: string } = {
+    true: 'Actif',
+    false: 'Inactif',
   };
 
   constructor(

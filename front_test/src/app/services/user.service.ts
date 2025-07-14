@@ -20,48 +20,61 @@ export interface RegisterRequest {
   firstname: string;
   lastname: string;
   email: string;
-  password?: string;  // <-- made optional here!
+  password?: string;  // optional during registration
   role: string;
-  status?: boolean;
+  status?: boolean;   // optional, may be set by backend
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = '/api/users';
+  private baseUrl = 'http://localhost:8080/api/users';
+
 
   constructor(private http: HttpClient) {}
 
-  // Public endpoints (no auth needed)
+  /** Get all users (public, no auth required) */
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.baseUrl}`);
+    const headers = this.getAuthHeaders();
+    return this.http.get<User[]>(this.baseUrl, { headers });
   }
 
-  getUserById(id: number): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}/${id}`);
+
+  /** Get a user by ID (public) */
+
+  getUserById(id: number) {
+    const token = localStorage.getItem('authToken'); // or from a service
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.get(`${this.baseUrl}/${id}`, { headers });
   }
 
+  /** Register a new user (public) */
   registerUser(user: RegisterRequest): Observable<string> {
     return this.http.post(`${this.baseUrl}/register`, user, { responseType: 'text' });
   }
 
-  // Protected endpoints (send JWT token)
+  /** Update user data (requires JWT authorization) */
   updateUser(id: number, updatedUser: RegisterRequest): Observable<AuthResponse> {
     const headers = this.getAuthHeaders();
     return this.http.put<AuthResponse>(`${this.baseUrl}/update/${id}`, updatedUser, { headers });
   }
 
+  /** Delete a user by ID (requires JWT authorization) */
   deleteUser(id: number): Observable<string> {
     const headers = this.getAuthHeaders();
     return this.http.delete(`${this.baseUrl}/delete/${id}`, { headers, responseType: 'text' });
   }
 
-  // This endpoint appears public, no auth needed
+  /** Get user ID by email (public) */
   getUserIdByEmail(email: string): Observable<number> {
     return this.http.get<number>(`${this.baseUrl}/id?email=${encodeURIComponent(email)}`);
   }
 
+  /** Helper: prepare HTTP headers with JWT authorization */
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('authToken') || '';
     return new HttpHeaders({

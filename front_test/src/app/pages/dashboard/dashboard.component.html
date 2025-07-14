@@ -80,13 +80,13 @@
 
 <div class="row">
   <!-- Bar Chart on the Left -->
-  <div class="col-md-8">
-    <div class="card card-chart">
+  <div class="col-md-8 d-flex flex-column">
+    <div class="card card-chart flex-fill d-flex flex-column">
       <div class="card-header">
         <h5 class="card-title">Etat hebdomadaire des messages</h5>
       </div>
-      <div class="card-body">
-        <canvas id="speedChart" width="400" height="145"></canvas>
+      <div class="card-body flex-fill d-flex">
+        <canvas id="speedChart" style="flex: 1 1 auto;"></canvas>
       </div>
       <div class="card-footer">
         <hr/>
@@ -98,23 +98,22 @@
   </div>
 
   <!-- Weekly Status on the Right -->
-  <div class="col-md-4">
-    <div class="card ">
-      <div class="card-header ">
-        <h5 class="card-title">Statut hebdomadaire des messages</h5>
-      </div>
-      <div class="card-body ">
-        <canvas id="MessageStatus"></canvas>
-      </div>
-      <div class="card-footer ">
-        <div class="legend" id="customPieLegend">
-          <!-- Custom legend with percentages will be inserted here -->
-        </div>
-        <hr>
-        <div class="stats">
-          <i class="fa fa-calendar"></i> Données de la semaine en cours
-        </div>
+<div class="col-md-4 d-flex flex-column">
+  <div class="card" style="min-height: 480px; display: flex; flex-direction: column; flex-grow: 1;">
+    <div class="card-header">
+      <h5 class="card-title">Statut hebdomadaire des messages</h5>
+    </div>
+    <div class="card-body" style="flex-grow: 1; display: flex; padding-top: 1rem; padding-bottom: 2rem;">
+      <canvas id="MessageStatus" style="flex: 1 1 auto; width: 90%; height: 90%; display: block;"></canvas>
+    </div>
+    <div class="card-footer">
+      <div class="legend" id="customPieLegend"></div>
+      <hr/>
+      <div class="stats">
+        <i class="fa fa-calendar"></i> Données de la semaine en cours
       </div>
     </div>
   </div>
+</div>
+
 </div>

@@ -17,7 +17,7 @@ export interface ScMxFile {
 })
 export class ScMxFileService {
 
-  private apiUrl = '/api/sc-mx-file';  // base URL for your backend endpoint
+  private apiUrl = 'http://localhost:8080/api/sc-mx-file';  // base URL for your backend endpoint
 
   constructor(private http: HttpClient) {}
 

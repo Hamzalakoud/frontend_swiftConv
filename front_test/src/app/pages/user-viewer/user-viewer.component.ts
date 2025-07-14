@@ -48,7 +48,7 @@ export class UserViewerComponent implements OnInit {
   loadUser(): void {
     this.isLoading = true;
     this.userService.getUserById(this.userId).subscribe({
-      next: (user) => {
+      next: (user: User) => {
         this.userData = user;
         this.userForm.patchValue({
           username: user.firstname,

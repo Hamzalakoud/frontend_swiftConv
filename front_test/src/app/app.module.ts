@@ -4,6 +4,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { ToastrModule } from "ngx-toastr";
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
 import { AppRoutes } from './app.routing';
@@ -21,7 +23,6 @@ import { FixedPluginModule } from './shared/fixedplugin/fixedplugin.module';
 import { JwtInterceptor } from './services/jwt.interceptor';
 
 // Pages
-
 import { MsgViewerComponent } from './pages/msg-viewer/msg-viewer.component';
 import { TableComponent } from './pages/table/table.component';
 import { CommonModule } from '@angular/common';
@@ -32,8 +33,7 @@ import { MappingMtToMxComponent } from './pages/mapping-mt-to-mx/mapping-mt-to-m
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-    
-    
+
   ],
   imports: [
     BrowserModule,
@@ -45,7 +45,10 @@ import { MappingMtToMxComponent } from './pages/mapping-mt-to-mx/mapping-mt-to-m
     FooterModule,
     FixedPluginModule,
     ReactiveFormsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production
+    })
   ],
   providers: [
     {

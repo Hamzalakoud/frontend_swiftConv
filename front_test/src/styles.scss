@@ -10,3 +10,13 @@ html, body {
   overflow: visible;    /* no internal scrollbars */
   
 }
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/assets/fonts/Montserrat-Italic-VariableFont_wght.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@import url('assets/css/bootstrap.min.css');
+@import url('assets/css/fontawesome.min.css');

@@ -6,7 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminLayoutRoutes } from './admin-layout.routing';
 
 import { DashboardComponent } from '../../pages/dashboard/dashboard.component';
-import { UserComponent } from '../../pages/user/user.component';
 import { TypographyComponent } from '../../pages/typography/typography.component';
 import { IconsComponent } from '../../pages/icons/icons.component';
 import { TableUserComponent } from '../../pages/table-user/table-user';
@@ -36,7 +35,6 @@ import { ScMappingDirectoryComponent } from 'app/pages/sc-mapping-directory/sc-m
   ],
   declarations: [
     DashboardComponent,
-    UserComponent,
     TableComponent,
     TableUserComponent,
     UpgradeComponent,
